@@ -1,21 +1,55 @@
 #!/usr/bin/env python3
 """
-Gerador Dinâmico de Perfis Acadêmicos a partir do Grafo RDF/Turtle
+Gerador Dinâmico do Portal de Perfis Acadêmicos, Consultas Interativas e Grafo LOD
 Trabalho de Web Semântica e Linked Open Data - UFRRJ
 Autor: David Barros da Rosa Filho
 """
 
 import os
 import json
+import shutil
 import rdflib
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DADOS_TTL_PATH = os.path.join(BASE_DIR, "ontologia", "dados.ttl")
 ONTOLOGIA_OWL_PATH = os.path.join(BASE_DIR, "ontologia", "ontologia.owl")
+CONSULTAS_DIR = os.path.join(BASE_DIR, "consultas")
 SITE_DIR = os.path.join(BASE_DIR, "site")
+DOCS_DIR = os.path.join(BASE_DIR, "docs")
 PERFIS_DIR = os.path.join(SITE_DIR, "perfis")
 
 os.makedirs(PERFIS_DIR, exist_ok=True)
+os.makedirs(DOCS_DIR, exist_ok=True)
+
+NAVBAR_HTML = """
+  <nav style="background: #1e293b; padding: 0.75rem 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <div style="font-weight: bold; color: #f8fafc; font-size: 1.05rem;">
+      <a href="index.html" style="color: #38bdf8; text-decoration: none;">UFRRJ &bull; Web Semântica &amp; LOD</a>
+    </div>
+    <div style="display: flex; gap: 1.25rem; font-size: 0.95rem; align-items: center;">
+      <a href="index.html" style="color: #e2e8f0; text-decoration: none; font-weight: 500;">Início</a>
+      <a href="consultas.html" style="color: #e2e8f0; text-decoration: none; font-weight: 500;">Consultas SPARQL</a>
+      <a href="grafo.html" style="color: #e2e8f0; text-decoration: none; font-weight: 500;">Grafo Visual</a>
+      <a href="../ontologia/dados.ttl" target="_blank" style="color: #38bdf8; text-decoration: none; font-weight: 600; background: rgba(56,189,248,0.15); padding: 4px 10px; border-radius: 4px;">RDF Turtle (.ttl)</a>
+      <a href="../ontologia/ontologia.owl" target="_blank" style="color: #a78bfa; text-decoration: none; font-weight: 600; background: rgba(167,139,250,0.15); padding: 4px 10px; border-radius: 4px;">Ontologia OWL</a>
+    </div>
+  </nav>
+"""
+
+NAVBAR_SUBDIR_HTML = """
+  <nav style="background: #1e293b; padding: 0.75rem 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <div style="font-weight: bold; color: #f8fafc; font-size: 1.05rem;">
+      <a href="../index.html" style="color: #38bdf8; text-decoration: none;">UFRRJ &bull; Web Semântica &amp; LOD</a>
+    </div>
+    <div style="display: flex; gap: 1.25rem; font-size: 0.95rem; align-items: center;">
+      <a href="../index.html" style="color: #e2e8f0; text-decoration: none; font-weight: 500;">Início</a>
+      <a href="../consultas.html" style="color: #e2e8f0; text-decoration: none; font-weight: 500;">Consultas SPARQL</a>
+      <a href="../grafo.html" style="color: #e2e8f0; text-decoration: none; font-weight: 500;">Grafo Visual</a>
+      <a href="../../ontologia/dados.ttl" target="_blank" style="color: #38bdf8; text-decoration: none; font-weight: 600; background: rgba(56,189,248,0.15); padding: 4px 10px; border-radius: 4px;">RDF Turtle (.ttl)</a>
+      <a href="../../ontologia/ontologia.owl" target="_blank" style="color: #a78bfa; text-decoration: none; font-weight: 600; background: rgba(167,139,250,0.15); padding: 4px 10px; border-radius: 4px;">Ontologia OWL</a>
+    </div>
+  </nav>
+"""
 
 def carregar_dados():
     g = rdflib.Graph()
@@ -27,8 +61,6 @@ def extrair_perfis(g):
     query_docentes = """
     PREFIX : <http://dados.ufrrj.br/ontologia/>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    PREFIX schema: <http://schema.org/>
-    PREFIX dcterms: <http://purl.org/dc/terms/>
 
     SELECT DISTINCT ?uri ?nome ?cargo ?titulacao ?email ?bio ?deptoNome ?instNome ?lattes ?orcid ?pagina
     WHERE {
@@ -51,7 +83,6 @@ def extrair_perfis(g):
     query_discentes = """
     PREFIX : <http://dados.ufrrj.br/ontologia/>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    PREFIX schema: <http://schema.org/>
 
     SELECT DISTINCT ?uri ?nome ?cargo ?anoIngresso ?periodo ?email ?bio ?cursoNome ?instNome ?lattes ?orcid ?pagina
     WHERE {
@@ -77,7 +108,6 @@ def extrair_perfis(g):
         uri = row.uri
         doc_id = str(uri).split("/")[-1]
         
-        # Áreas
         areas = [str(r.label) for r in g.query(f"""
             PREFIX : <http://dados.ufrrj.br/ontologia/>
             PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
@@ -88,7 +118,6 @@ def extrair_perfis(g):
             }}
         """)]
 
-        # Disciplinas
         disciplinas = [str(r.label) for r in g.query(f"""
             PREFIX : <http://dados.ufrrj.br/ontologia/>
             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -98,7 +127,6 @@ def extrair_perfis(g):
             }}
         """)]
 
-        # Projetos
         projetos = [{"titulo": str(r.tit), "papel": str(r.papel)} for r in g.query(f"""
             PREFIX : <http://dados.ufrrj.br/ontologia/>
             PREFIX dcterms: <http://purl.org/dc/terms/>
@@ -111,7 +139,6 @@ def extrair_perfis(g):
             }}
         """)]
 
-        # Grupos de pesquisa
         grupos = [str(r.tit) for r in g.query(f"""
             PREFIX : <http://dados.ufrrj.br/ontologia/>
             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -121,7 +148,6 @@ def extrair_perfis(g):
             }}
         """)]
 
-        # Publicações
         publicacoes = [{"titulo": str(r.tit), "ano": str(r.ano)} for r in g.query(f"""
             PREFIX : <http://dados.ufrrj.br/ontologia/>
             PREFIX dcterms: <http://purl.org/dc/terms/>
@@ -159,7 +185,6 @@ def extrair_perfis(g):
         uri = row.uri
         disc_id = str(uri).split("/")[-1]
 
-        # Áreas
         areas = [str(r.label) for r in g.query(f"""
             PREFIX : <http://dados.ufrrj.br/ontologia/>
             PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
@@ -170,7 +195,6 @@ def extrair_perfis(g):
             }}
         """)]
 
-        # Projetos
         projetos = [{"titulo": str(r.tit), "papel": "Bolsista / Integrante"} for r in g.query(f"""
             PREFIX : <http://dados.ufrrj.br/ontologia/>
             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -180,7 +204,6 @@ def extrair_perfis(g):
             }}
         """)]
 
-        # Publicações
         publicacoes = [{"titulo": str(r.tit), "ano": str(r.ano)} for r in g.query(f"""
             PREFIX : <http://dados.ufrrj.br/ontologia/>
             PREFIX dcterms: <http://purl.org/dc/terms/>
@@ -255,6 +278,7 @@ def render_docente(p):
   </script>
 </head>
 <body>
+  {NAVBAR_SUBDIR_HTML}
   <header class="site-header">
     <div class="header-inner">
       <a href="../index.html" class="site-title">Universidade Federal Rural do Rio de Janeiro</a>
@@ -393,6 +417,7 @@ def render_discente(p):
   </script>
 </head>
 <body>
+  {NAVBAR_SUBDIR_HTML}
   <header class="site-header">
     <div class="header-inner">
       <a href="../index.html" class="site-title">Universidade Federal Rural do Rio de Janeiro</a>
@@ -535,6 +560,7 @@ def render_index(docentes, discentes):
   <link rel="alternate" type="text/turtle" href="../ontologia/dados.ttl" title="Grafo RDF em Turtle">
 </head>
 <body>
+  {NAVBAR_HTML}
   <header class="site-header">
     <div class="header-inner">
       <h1 class="site-title">Universidade Federal Rural do Rio de Janeiro</h1>
@@ -550,9 +576,9 @@ def render_index(docentes, discentes):
         Todas as informações apresentadas foram geradas a partir do <strong>grafo RDF/Turtle</strong> da ontologia institucional, permitindo consultas semânticas em <strong>SPARQL</strong> e interoperabilidade com fontes de dados globais (Wikidata, DBpedia e ORCID).
       </p>
       <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
-        <a href="../ontologia/dados.ttl" style="background: white; color: #1e3c72; padding: 8px 16px; border-radius: 6px; font-weight: bold; text-decoration: none;">Baixar RDF Turtle (.ttl)</a>
-        <a href="../ontologia/ontologia.owl" style="background: rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 6px; font-weight: bold; text-decoration: none; border: 1px solid white;">Ver Ontologia OWL</a>
-        <a href="../consultas/resultados_consolidados.md" style="background: rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 6px; font-weight: bold; text-decoration: none; border: 1px solid white;">Consultas SPARQL</a>
+        <a href="consultas.html" style="background: #38bdf8; color: #0f172a; padding: 10px 18px; border-radius: 6px; font-weight: bold; text-decoration: none;">🔍 Ver Consultas SPARQL Interativas</a>
+        <a href="grafo.html" style="background: rgba(255,255,255,0.2); color: white; padding: 10px 18px; border-radius: 6px; font-weight: bold; text-decoration: none; border: 1px solid white;">🕸️ Explorar Grafo Visual</a>
+        <a href="../ontologia/dados.ttl" style="background: white; color: #1e3c72; padding: 10px 18px; border-radius: 6px; font-weight: bold; text-decoration: none;">💾 Baixar RDF Turtle (.ttl)</a>
       </div>
     </section>
 
@@ -587,13 +613,403 @@ def render_index(docentes, discentes):
 </html>
 """
 
+def render_consultas_html(g):
+    perguntas = {
+        1: ("Docentes e Departamentos", "Quais são os docentes cadastrados e seus respectivos departamentos ou unidades acadêmicas?"),
+        2: ("Discentes por Curso", "Quais discentes pertencem a determinado curso?"),
+        3: ("Docentes por Área de Pesquisa", "Quais docentes atuam em determinada área de pesquisa?"),
+        4: ("Docentes e Discentes no Mesmo Projeto", "Quais docentes e discentes participam de um mesmo projeto de pesquisa?"),
+        5: ("Publicações e Coautores", "Quais publicações estão associadas a determinado docente e quem são seus coautores?"),
+        6: ("Pessoas por Unidade Acadêmica", "Quais pessoas estão vinculadas a uma unidade acadêmica específica (ICE)?")
+    }
+
+    consultas_dados = []
+    for i in range(1, 7):
+        arq_rq = os.path.join(CONSULTAS_DIR, f"consulta0{i}.rq")
+        with open(arq_rq, "r", encoding="utf-8") as f:
+            query_str = f.read()
+
+        res = g.query(query_str)
+        vars_names = [str(v) for v in res.vars]
+        rows = []
+        for r in res:
+            rows.append([str(r[v]) if r[v] is not None else "" for v in res.vars])
+
+        consultas_dados.append({
+            "num": i,
+            "titulo": perguntas[i][0],
+            "pergunta": perguntas[i][1],
+            "sparql": query_str.strip(),
+            "vars": vars_names,
+            "rows": rows
+        })
+
+    json_consultas = json.dumps(consultas_dados, ensure_ascii=False)
+
+    return f"""<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Consultas SPARQL Interativas | UFRRJ - Web Semântica</title>
+  <link rel="stylesheet" href="estilos.css">
+  <style>
+    .tab-btn {{
+      padding: 10px 16px;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #334155;
+      transition: all 0.2s;
+    }}
+    .tab-btn.active {{
+      background: #1e3c72;
+      color: white;
+      border-color: #1e3c72;
+    }}
+    pre.code-box {{
+      background: #0f172a;
+      color: #38bdf8;
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Consolas', monospace;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }}
+    table.result-tbl {{
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      background: white;
+    }}
+    table.result-tbl th, table.result-tbl td {{
+      border: 1px solid #e2e8f0;
+      padding: 10px 12px;
+      text-align: left;
+      font-size: 0.9rem;
+    }}
+    table.result-tbl th {{
+      background: #f8fafc;
+      color: #1e293b;
+      font-weight: 600;
+    }}
+    table.result-tbl tr:hover {{
+      background: #f1f5f9;
+    }}
+  </style>
+</head>
+<body>
+  {NAVBAR_HTML}
+  <header class="site-header">
+    <div class="header-inner">
+      <h1 class="site-title">Consultas SPARQL 1.1 &bull; Evidências de Competência</h1>
+      <p class="site-subtitle">Execução interativa contra o Grafo de Conhecimento RDF da UFRRJ</p>
+    </div>
+  </header>
+
+  <main style="max-width: 1050px; margin: 2rem auto; padding: 0 1rem;">
+    <section class="card" style="margin-bottom: 1.5rem;">
+      <h2 style="margin-top: 0;">Selecione a Consulta SPARQL para Visualizar:</h2>
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem;">
+        <button class="tab-btn active" onclick="mostrarConsulta(1)">Consulta 01: Docentes & Deptos</button>
+        <button class="tab-btn" onclick="mostrarConsulta(2)">Consulta 02: Discentes por Curso</button>
+        <button class="tab-btn" onclick="mostrarConsulta(3)">Consulta 03: Áreas de Pesquisa</button>
+        <button class="tab-btn" onclick="mostrarConsulta(4)">Consulta 04: Projetos Compartilhados</button>
+        <button class="tab-btn" onclick="mostrarConsulta(5)">Consulta 05: Publicações & Coautores</button>
+        <button class="tab-btn" onclick="mostrarConsulta(6)">Consulta 06: Pessoas no ICE</button>
+      </div>
+    </section>
+
+    <section class="card" id="painel-consulta">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap;">
+        <h2 id="q-titulo" style="color: #1e3c72; margin-top: 0;"></h2>
+        <span id="q-badge" style="background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 20px; font-weight: bold; font-size: 0.85rem;"></span>
+      </div>
+      <p id="q-pergunta" style="font-size: 1.1rem; color: #334155; font-weight: 500;"></p>
+
+      <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Código SPARQL da Consulta</h3>
+      <pre class="code-box" id="q-sparql"></pre>
+
+      <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Resultado Retornado pelo Grafo RDF</h3>
+      <div id="q-tabela-container" style="overflow-x: auto;"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Consultas SPARQL validadas via RDFLib 7.6.0 &bull; UFRRJ Linked Open Data</p>
+  </footer>
+
+  <script>
+    const consultas = {json_consultas};
+
+    function mostrarConsulta(num) {{
+      document.querySelectorAll('.tab-btn').forEach((btn, idx) => {{
+        if (idx === num - 1) btn.classList.add('active');
+        else btn.classList.remove('active');
+      }});
+
+      const c = consultas.find(item => item.num === num);
+      if (!c) return;
+
+      document.getElementById('q-titulo').innerText = 'Consulta 0' + c.num + ': ' + c.titulo;
+      document.getElementById('q-pergunta').innerText = '"' + c.pergunta + '"';
+      document.getElementById('q-badge').innerText = c.rows.length + ' registros retornados';
+      document.getElementById('q-sparql').innerText = c.sparql;
+
+      let html = '<table class="result-tbl"><thead><tr>';
+      c.vars.forEach(v => {{
+        html += '<th>' + v + '</th>';
+      }});
+      html += '</tr></thead><tbody>';
+
+      c.rows.forEach(r => {{
+        html += '<tr>';
+        r.forEach(cel => {{
+          if (cel.startsWith('http://dados.ufrrj.br/recurso/')) {{
+            const id = cel.split('/').pop();
+            html += '<td><code>ufrrj:' + id + '</code></td>';
+          }} else if (cel.startsWith('http')) {{
+            html += '<td><a href="' + cel + '" target="_blank">' + cel + '</a></td>';
+          }} else {{
+            html += '<td>' + cel + '</td>';
+          }}
+        }});
+        html += '</tr>';
+      }});
+      html += '</tbody></table>';
+
+      document.getElementById('q-tabela-container').innerHTML = html;
+    }}
+
+    // Inicia com a primeira consulta
+    mostrarConsulta(1);
+  </script>
+</body>
+</html>
+"""
+
+def render_grafo_html():
+    return f"""<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Grafo de Conhecimento Interativo | UFRRJ - Web Semântica</title>
+  <link rel="stylesheet" href="estilos.css">
+  <style>
+    #canvas-grafo {{
+      width: 100%;
+      height: 600px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: #f8fafc;
+      display: block;
+      cursor: grab;
+    }}
+    .legend-tag {{
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }}
+  </style>
+</head>
+<body>
+  {NAVBAR_HTML}
+  <header class="site-header">
+    <div class="header-inner">
+      <h1 class="site-title">Grafo de Conhecimento Interativo (LOD Network)</h1>
+      <p class="site-subtitle">Visualização topológica das entidades acadêmicas e conexões da Web Semântica</p>
+    </div>
+  </header>
+
+  <main style="max-width: 1100px; margin: 2rem auto; padding: 0 1rem;">
+    <section class="card" style="margin-bottom: 1.5rem;">
+      <h2 style="margin-top: 0;">Explore os Vínculos Semânticos</h2>
+      <p style="color: #64748b;">
+        Este mapa renderiza o grafo RDF integrado da UFRRJ. Você pode <strong>arrastar os nós</strong> com o mouse para reposicioná-los e inspecionar a malha de relacionamentos entre professores, discentes, unidades acadêmicas, projetos e recursos de Linked Open Data externos.
+      </p>
+      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem;">
+        <span class="legend-tag" style="background: #e0f2fe; color: #0369a1;">● Docentes (Ana Silva, Mariana Almeida)</span>
+        <span class="legend-tag" style="background: #f0fdf4; color: #15803d;">● Discentes (João Pereira, Lucas Ferreira)</span>
+        <span class="legend-tag" style="background: #fef3c7; color: #b45309;">● Unidades e Cursos (ICE, DCC, BSI)</span>
+        <span class="legend-tag" style="background: #f3e8ff; color: #7e22ce;">● Projetos de Pesquisa</span>
+        <span class="legend-tag" style="background: #ffe4e6; color: #be123c;">● LOD Externo (Wikidata, DBpedia, ORCID)</span>
+      </div>
+    </section>
+
+    <div class="card" style="padding: 10px;">
+      <canvas id="canvas-grafo" width="1050" height="600"></canvas>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>Grafo gerado a partir de <code>ontologia/dados.ttl</code> e <code>ontologia/ontologia.owl</code> &bull; UFRRJ</p>
+  </footer>
+
+  <script>
+    const canvas = document.getElementById('canvas-grafo');
+    const ctx = canvas.getContext('2d');
+
+    const nodes = [
+      {{ id: 'ufrrj', label: 'UFRRJ', type: 'unidade', x: 525, y: 70, r: 28, color: '#f59e0b' }},
+      {{ id: 'ice', label: 'ICE', type: 'unidade', x: 525, y: 170, r: 24, color: '#f59e0b' }},
+      {{ id: 'dcc', label: 'Depto Computação', type: 'unidade', x: 340, y: 250, r: 22, color: '#f59e0b' }},
+      {{ id: 'bsi', label: 'Curso BSI', type: 'unidade', x: 710, y: 250, r: 22, color: '#f59e0b' }},
+      
+      {{ id: 'ana', label: 'Dra. Ana Silva', type: 'docente', x: 230, y: 350, r: 24, color: '#0284c7' }},
+      {{ id: 'mariana', label: 'Dra. Mariana Almeida', type: 'docente', x: 420, y: 350, r: 24, color: '#0284c7' }},
+      
+      {{ id: 'joao', label: 'João Pereira', type: 'discente', x: 640, y: 350, r: 22, color: '#16a34a' }},
+      {{ id: 'lucas', label: 'Lucas Ferreira', type: 'discente', x: 820, y: 350, r: 22, color: '#16a34a' }},
+
+      {{ id: 'proj_dados', label: 'Proj. Dados Abertos', type: 'projeto', x: 450, y: 470, r: 24, color: '#9333ea' }},
+      {{ id: 'proj_edu', label: 'Proj. Educação Digital', type: 'projeto', x: 700, y: 470, r: 24, color: '#9333ea' }},
+
+      {{ id: 'pub2024', label: 'Pub. 2024 (Conectados)', type: 'pub', x: 300, y: 470, r: 20, color: '#6366f1' }},
+
+      {{ id: 'wkd_ufrrj', label: 'Wikidata (UFRRJ Q3550293)', type: 'lod', x: 780, y: 70, r: 20, color: '#e11d48' }},
+      {{ id: 'orcid_ana', label: 'ORCID (Ana Silva)', type: 'lod', x: 90, y: 350, r: 18, color: '#e11d48' }},
+      {{ id: 'wkd_ia', label: 'Wikidata (IA Q11660)', type: 'lod', x: 920, y: 470, r: 18, color: '#e11d48' }}
+    ];
+
+    const edges = [
+      {{ from: 'ice', to: 'ufrrj', label: ':pertenceA' }},
+      {{ from: 'dcc', to: 'ice', label: ':vinculadoA' }},
+      {{ from: 'bsi', to: 'ice', label: ':vinculadoA' }},
+      
+      {{ from: 'ana', to: 'dcc', label: ':lotadoEm' }},
+      {{ from: 'mariana', to: 'dcc', label: ':lotadoEm' }},
+
+      {{ from: 'joao', to: 'bsi', label: ':matriculadoEm' }},
+      {{ from: 'lucas', to: 'bsi', label: ':matriculadoEm' }},
+
+      {{ from: 'ana', to: 'proj_dados', label: ':coordena' }},
+      {{ from: 'mariana', to: 'proj_dados', label: ':participaDe' }},
+      {{ from: 'joao', to: 'proj_dados', label: ':participaDe' }},
+      {{ from: 'lucas', to: 'proj_dados', label: ':participaDe' }},
+
+      {{ from: 'mariana', to: 'proj_edu', label: ':coordena' }},
+      {{ from: 'lucas', to: 'proj_edu', label: ':participaDe' }},
+
+      {{ from: 'ana', to: 'joao', label: ':orienta' }},
+      {{ from: 'mariana', to: 'lucas', label: ':orienta' }},
+
+      {{ from: 'ana', to: 'pub2024', label: ':autorDe' }},
+      {{ from: 'mariana', to: 'pub2024', label: ':autorDe' }},
+      {{ from: 'joao', to: 'pub2024', label: ':autorDe' }},
+
+      {{ from: 'ufrrj', to: 'wkd_ufrrj', label: 'owl:sameAs' }},
+      {{ from: 'ana', to: 'orcid_ana', label: 'schema:sameAs' }},
+      {{ from: 'proj_edu', to: 'wkd_ia', label: 'skos:match' }}
+    ];
+
+    let draggedNode = null;
+    let dragOffsetX = 0;
+    let dragOffsetY = 0;
+
+    function draw() {{
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Edges
+      edges.forEach(e => {{
+        const src = nodes.find(n => n.id === e.from);
+        const tgt = nodes.find(n => n.id === e.to);
+        if (!src || !tgt) return;
+
+        ctx.beginPath();
+        ctx.moveTo(src.x, src.y);
+        ctx.lineTo(tgt.x, tgt.y);
+        ctx.strokeStyle = e.label.includes('sameAs') || e.label.includes('match') ? '#f43f5e' : '#94a3b8';
+        ctx.lineWidth = e.label.includes('sameAs') ? 2 : 1.5;
+        if (e.label.includes('sameAs') || e.label.includes('orienta')) {{
+          ctx.setLineDash([4, 4]);
+        }} else {{
+          ctx.setLineDash([]);
+        }}
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Label
+        const midX = (src.x + tgt.x) / 2;
+        const midY = (src.y + tgt.y) / 2;
+        ctx.fillStyle = '#475569';
+        ctx.font = '10px sans-serif';
+        ctx.fillText(e.label, midX + 3, midY - 3);
+      }});
+
+      // Nodes
+      nodes.forEach(n => {{
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+        ctx.fillStyle = n.color;
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        ctx.fillStyle = '#0f172a';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(n.label, n.x, n.y + n.r + 14);
+      }});
+    }}
+
+    canvas.addEventListener('mousedown', (e) => {{
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+
+      nodes.forEach(n => {{
+        const dist = Math.hypot(n.x - mouseX, n.y - mouseY);
+        if (dist <= n.r) {{
+          draggedNode = n;
+          dragOffsetX = n.x - mouseX;
+          dragOffsetY = n.y - mouseY;
+          canvas.style.cursor = 'grabbing';
+        }}
+      }});
+    }});
+
+    canvas.addEventListener('mousemove', (e) => {{
+      if (!draggedNode) return;
+      const rect = canvas.getBoundingClientRect();
+      draggedNode.x = e.clientX - rect.left + dragOffsetX;
+      draggedNode.y = e.clientY - rect.top + dragOffsetY;
+      draw();
+    }});
+
+    window.addEventListener('mouseup', () => {{
+      draggedNode = null;
+      canvas.style.cursor = 'grab';
+    }});
+
+    draw();
+  </script>
+</body>
+</html>
+"""
+
+def sincronizar_docs():
+    """Copia todo o conteúdo do site gerado para docs/ facilitando o GitHub Pages imediato."""
+    if os.path.exists(DOCS_DIR):
+        shutil.rmtree(DOCS_DIR)
+    shutil.copytree(SITE_DIR, DOCS_DIR)
+    print(f"      -> Pasta docs/ sincronizada com sucesso para suporte nativo ao GitHub Pages!")
+
 def main():
-    print("[1/3] Conectando ao Grafo RDF da Ontologia...")
+    print("[1/4] Conectando ao Grafo RDF da Ontologia...")
     g = carregar_dados()
     docentes, discentes = extrair_perfis(g)
     print(f"      Encontrados {len(docentes)} docentes e {len(discentes)} discentes no Grafo RDF.")
 
-    print("[2/3] Gerando páginas individuais dos perfis com JSON-LD embutido...")
+    print("[2/4] Gerando páginas individuais dos perfis com JSON-LD embutido...")
     for doc in docentes:
         caminho = os.path.join(PERFIS_DIR, f"{doc['id']}.html")
         html = render_docente(doc)
@@ -608,20 +1024,28 @@ def main():
             f.write(html)
         print(f"      -> Perfil discente gerado: {disc['id']}.html")
 
-    print("[3/3] Gerando portal principal (index.html)...")
+    print("[3/4] Gerando portal principal, consultas interativas e grafo visual...")
     index_html = render_index(docentes, discentes)
-    index_path = os.path.join(SITE_DIR, "index.html")
-    with open(index_path, "w", encoding="utf-8") as f:
+    with open(os.path.join(SITE_DIR, "index.html"), "w", encoding="utf-8") as f:
         f.write(index_html)
-    print(f"      -> Portal gerado com sucesso: {index_path}")
+
+    consultas_html = render_consultas_html(g)
+    with open(os.path.join(SITE_DIR, "consultas.html"), "w", encoding="utf-8") as f:
+        f.write(consultas_html)
+
+    grafo_html = render_grafo_html()
+    with open(os.path.join(SITE_DIR, "grafo.html"), "w", encoding="utf-8") as f:
+        f.write(grafo_html)
 
     # Salva também um espelho em formato JSON para fins didáticos/documentação
     json_path = os.path.join(BASE_DIR, "codigo-fonte", "dados_extraidos_rdf.json")
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump({"docentes": docentes, "discentes": discentes}, f, ensure_ascii=False, indent=2)
-    print(f"      -> Exportação estruturada em JSON salva em: {json_path}")
 
-    print("\n[SUCESSO] Aplicação Web e perfis gerados a partir da fonte de dados semântica!")
+    print("[4/4] Sincronizando pasta docs/ para publicação no GitHub Pages...")
+    sincronizar_docs()
+
+    print("\n[SUCESSO] Todo o ecossistema web semântico foi compilado e publicado em site/ e docs/!")
 
 if __name__ == "__main__":
     main()

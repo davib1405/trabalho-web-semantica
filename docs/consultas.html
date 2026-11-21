@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Consultas SPARQL Interativas | UFRRJ - Web Semântica</title>
+  <link rel="stylesheet" href="estilos.css">
+  <style>
+    .tab-btn {
+      padding: 10px 16px;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #334155;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      background: #1e3c72;
+      color: white;
+      border-color: #1e3c72;
+    }
+    pre.code-box {
+      background: #0f172a;
+      color: #38bdf8;
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Consolas', monospace;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    table.result-tbl {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      background: white;
+    }
+    table.result-tbl th, table.result-tbl td {
+      border: 1px solid #e2e8f0;
+      padding: 10px 12px;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+    table.result-tbl th {
+      background: #f8fafc;
+      color: #1e293b;
+      font-weight: 600;
+    }
+    table.result-tbl tr:hover {
+      background: #f1f5f9;
+    }
+  </style>
+</head>
+<body>
+  
+  <nav style="background: #1e293b; padding: 0.75rem 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <div style="font-weight: bold; color: #f8fafc; font-size: 1.05rem;">
+      <a href="index.html" style="color: #38bdf8; text-decoration: none;">UFRRJ &bull; Web Semântica &amp; LOD</a>
+    </div>
+    <div style="display: flex; gap: 1.25rem; font-size: 0.95rem; align-items: center;">
+      <a href="index.html" style="color: #e2e8f0; text-decoration: none; font-weight: 500;">Início</a>
+      <a href="consultas.html" style="color: #e2e8f0; text-decoration: none; font-weight: 500;">Consultas SPARQL</a>
+      <a href="grafo.html" style="color: #e2e8f0; text-decoration: none; font-weight: 500;">Grafo Visual</a>
+      <a href="../ontologia/dados.ttl" target="_blank" style="color: #38bdf8; text-decoration: none; font-weight: 600; background: rgba(56,189,248,0.15); padding: 4px 10px; border-radius: 4px;">RDF Turtle (.ttl)</a>
+      <a href="../ontologia/ontologia.owl" target="_blank" style="color: #a78bfa; text-decoration: none; font-weight: 600; background: rgba(167,139,250,0.15); padding: 4px 10px; border-radius: 4px;">Ontologia OWL</a>
+    </div>
+  </nav>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <h1 class="site-title">Consultas SPARQL 1.1 &bull; Evidências de Competência</h1>
+      <p class="site-subtitle">Execução interativa contra o Grafo de Conhecimento RDF da UFRRJ</p>
+    </div>
+  </header>
+
+  <main style="max-width: 1050px; margin: 2rem auto; padding: 0 1rem;">
+    <section class="card" style="margin-bottom: 1.5rem;">
+      <h2 style="margin-top: 0;">Selecione a Consulta SPARQL para Visualizar:</h2>
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem;">
+        <button class="tab-btn active" onclick="mostrarConsulta(1)">Consulta 01: Docentes & Deptos</button>
+        <button class="tab-btn" onclick="mostrarConsulta(2)">Consulta 02: Discentes por Curso</button>
+        <button class="tab-btn" onclick="mostrarConsulta(3)">Consulta 03: Áreas de Pesquisa</button>
+        <button class="tab-btn" onclick="mostrarConsulta(4)">Consulta 04: Projetos Compartilhados</button>
+        <button class="tab-btn" onclick="mostrarConsulta(5)">Consulta 05: Publicações & Coautores</button>
+        <button class="tab-btn" onclick="mostrarConsulta(6)">Consulta 06: Pessoas no ICE</button>
+      </div>
+    </section>
+
+    <section class="card" id="painel-consulta">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap;">
+        <h2 id="q-titulo" style="color: #1e3c72; margin-top: 0;"></h2>
+        <span id="q-badge" style="background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 20px; font-weight: bold; font-size: 0.85rem;"></span>
+      </div>
+      <p id="q-pergunta" style="font-size: 1.1rem; color: #334155; font-weight: 500;"></p>
+
+      <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Código SPARQL da Consulta</h3>
+      <pre class="code-box" id="q-sparql"></pre>
+
+      <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Resultado Retornado pelo Grafo RDF</h3>
+      <div id="q-tabela-container" style="overflow-x: auto;"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Consultas SPARQL validadas via RDFLib 7.6.0 &bull; UFRRJ Linked Open Data</p>
+  </footer>
+
+  <script>
+    const consultas = [{"num": 1, "titulo": "Docentes e Departamentos", "pergunta": "Quais são os docentes cadastrados e seus respectivos departamentos ou unidades acadêmicas?", "sparql": "# Consulta 1: Quais são os docentes cadastrados e seus respectivos departamentos ou unidades acadêmicas?\nPREFIX : <http://dados.ufrrj.br/ontologia/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n\nSELECT ?docente ?nomeDocente ?departamento ?nomeDepartamento\nWHERE {\n    ?docente a :Docente ;\n             :nomeCompleto ?nomeDocente ;\n             :lotadoEm ?departamento .\n    ?departamento rdfs:label ?nomeDepartamento .\n}\nORDER BY ?nomeDocente", "vars": ["docente", "nomeDocente", "departamento", "nomeDepartamento"], "rows": [["http://dados.ufrrj.br/recurso/docente_ana_silva", "Profa. Dra. Ana Exemplo da Silva", "http://dados.ufrrj.br/recurso/DeptoComputacao", "Departamento de Computação"], ["http://dados.ufrrj.br/recurso/docente_mariana_almeida", "Profa. Dra. Mariana Almeida", "http://dados.ufrrj.br/recurso/DeptoComputacao", "Departamento de Computação"]]}, {"num": 2, "titulo": "Discentes por Curso", "pergunta": "Quais discentes pertencem a determinado curso?", "sparql": "# Consulta 2: Quais discentes pertencem a determinado curso?\nPREFIX : <http://dados.ufrrj.br/ontologia/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n\nSELECT ?discente ?nomeDiscente ?curso ?nomeCurso ?anoIngresso ?periodoAtual\nWHERE {\n    # Filtro ou busca para o curso de Sistemas de Informação\n    VALUES ?curso { <http://dados.ufrrj.br/recurso/CursoSistemasInformacao> }\n    ?curso rdfs:label ?nomeCurso .\n    \n    ?discente a :Discente ;\n              :nomeCompleto ?nomeDiscente ;\n              :matriculadoEm ?curso ;\n              :anoIngresso ?anoIngresso ;\n              :periodoAtual ?periodoAtual .\n}\nORDER BY ?anoIngresso ?nomeDiscente", "vars": ["discente", "nomeDiscente", "curso", "nomeCurso", "anoIngresso", "periodoAtual"], "rows": [["http://dados.ufrrj.br/recurso/discente_lucas_ferreira", "Lucas Ferreira", "http://dados.ufrrj.br/recurso/CursoSistemasInformacao", "Bacharelado em Sistemas de Informação", "2023", "7º período"], ["http://dados.ufrrj.br/recurso/discente_joao_pereira", "João Exemplo Pereira", "http://dados.ufrrj.br/recurso/CursoSistemasInformacao", "Bacharelado em Sistemas de Informação", "2024", "5º período"]]}, {"num": 3, "titulo": "Docentes por Área de Pesquisa", "pergunta": "Quais docentes atuam em determinada área de pesquisa?", "sparql": "# Consulta 3: Quais docentes atuam em determinada área de pesquisa?\nPREFIX : <http://dados.ufrrj.br/ontologia/>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n\nSELECT ?docente ?nomeDocente ?cargo ?area ?nomeArea\nWHERE {\n    ?docente a :Docente ;\n             :nomeCompleto ?nomeDocente ;\n             :cargoOuFuncao ?cargo ;\n             :atuaEmArea ?area .\n    ?area skos:prefLabel ?nomeArea .\n    FILTER (LANG(?nomeArea) = \"pt\")\n}\nORDER BY ?nomeArea ?nomeDocente", "vars": ["docente", "nomeDocente", "cargo", "area", "nomeArea"], "rows": [["http://dados.ufrrj.br/recurso/docente_ana_silva", "Profa. Dra. Ana Exemplo da Silva", "Professora Associada", "http://dados.ufrrj.br/recurso/AreaDadosAbertos", "Dados Abertos"], ["http://dados.ufrrj.br/recurso/docente_ana_silva", "Profa. Dra. Ana Exemplo da Silva", "Professora Associada", "http://dados.ufrrj.br/recurso/AreaEngenhariaConhecimento", "Engenharia de Conhecimento"], ["http://dados.ufrrj.br/recurso/docente_mariana_almeida", "Profa. Dra. Mariana Almeida", "Professora Adjunta", "http://dados.ufrrj.br/recurso/AreaInteligenciaArtificial", "Inteligência Artificial"], ["http://dados.ufrrj.br/recurso/docente_ana_silva", "Profa. Dra. Ana Exemplo da Silva", "Professora Associada", "http://dados.ufrrj.br/recurso/AreaWebSemantica", "Web Semântica"], ["http://dados.ufrrj.br/recurso/docente_mariana_almeida", "Profa. Dra. Mariana Almeida", "Professora Adjunta", "http://dados.ufrrj.br/recurso/AreaWebSemantica", "Web Semântica"]]}, {"num": 4, "titulo": "Docentes e Discentes no Mesmo Projeto", "pergunta": "Quais docentes e discentes participam de um mesmo projeto de pesquisa?", "sparql": "# Consulta 4: Quais docentes e discentes participam de um mesmo projeto de pesquisa?\nPREFIX : <http://dados.ufrrj.br/ontologia/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n\nSELECT DISTINCT ?projeto ?tituloProjeto ?docente ?nomeDocente ?discente ?nomeDiscente\nWHERE {\n    ?projeto a :Projeto ;\n             rdfs:label ?tituloProjeto .\n    \n    # Docente participante do projeto\n    ?docente a :Docente ;\n             :nomeCompleto ?nomeDocente ;\n             :participaDeProjeto ?projeto .\n             \n    # Discente participante do mesmo projeto\n    ?discente a :Discente ;\n              :nomeCompleto ?nomeDiscente ;\n              :participaDeProjeto ?projeto .\n}\nORDER BY ?tituloProjeto ?nomeDocente ?nomeDiscente", "vars": ["projeto", "tituloProjeto", "docente", "nomeDocente", "discente", "nomeDiscente"], "rows": [["http://dados.ufrrj.br/recurso/ProjetoDadosAbertos", "Projeto Exemplo de Dados Abertos", "http://dados.ufrrj.br/recurso/docente_ana_silva", "Profa. Dra. Ana Exemplo da Silva", "http://dados.ufrrj.br/recurso/discente_joao_pereira", "João Exemplo Pereira"], ["http://dados.ufrrj.br/recurso/ProjetoDadosAbertos", "Projeto Exemplo de Dados Abertos", "http://dados.ufrrj.br/recurso/docente_ana_silva", "Profa. Dra. Ana Exemplo da Silva", "http://dados.ufrrj.br/recurso/discente_lucas_ferreira", "Lucas Ferreira"], ["http://dados.ufrrj.br/recurso/ProjetoDadosAbertos", "Projeto Exemplo de Dados Abertos", "http://dados.ufrrj.br/recurso/docente_mariana_almeida", "Profa. Dra. Mariana Almeida", "http://dados.ufrrj.br/recurso/discente_joao_pereira", "João Exemplo Pereira"], ["http://dados.ufrrj.br/recurso/ProjetoDadosAbertos", "Projeto Exemplo de Dados Abertos", "http://dados.ufrrj.br/recurso/docente_mariana_almeida", "Profa. Dra. Mariana Almeida", "http://dados.ufrrj.br/recurso/discente_lucas_ferreira", "Lucas Ferreira"], ["http://dados.ufrrj.br/recurso/ProjetoEducacaoDigital", "Projeto de Pesquisa em Educação Digital e Inclusão Tecnológica", "http://dados.ufrrj.br/recurso/docente_mariana_almeida", "Profa. Dra. Mariana Almeida", "http://dados.ufrrj.br/recurso/discente_lucas_ferreira", "Lucas Ferreira"]]}, {"num": 5, "titulo": "Publicações e Coautores", "pergunta": "Quais publicações estão associadas a determinado docente e quem são seus coautores?", "sparql": "# Consulta 5: Quais publicações estão associadas a determinado docente e quem são seus coautores?\nPREFIX : <http://dados.ufrrj.br/ontologia/>\nPREFIX dcterms: <http://purl.org/dc/terms/>\n\nSELECT DISTINCT ?docente ?nomeDocente ?publicacao ?tituloPublicacao ?anoPublicacao ?coautor ?nomeCoautor\nWHERE {\n    ?docente a :Docente ;\n             :nomeCompleto ?nomeDocente .\n             \n    ?publicacao a :Publicacao ;\n                dcterms:title ?tituloPublicacao ;\n                :anoPublicacao ?anoPublicacao ;\n                :temAutor ?docente, ?coautor .\n                \n    ?coautor :nomeCompleto ?nomeCoautor .\n    \n    # Exclui o próprio docente da lista de coautores\n    FILTER (?coautor != ?docente)\n}\nORDER BY ?nomeDocente ?anoPublicacao ?tituloPublicacao ?nomeCoautor", "vars": ["docente", "nomeDocente", "publicacao", "tituloPublicacao", "anoPublicacao", "coautor", "nomeCoautor"], "rows": [["http://dados.ufrrj.br/recurso/docente_ana_silva", "Profa. Dra. Ana Exemplo da Silva", "http://dados.ufrrj.br/recurso/Pub2024DadosConectados", "Publicação sobre dados conectados e interoperabilidade acadêmica", "2024", "http://dados.ufrrj.br/recurso/discente_joao_pereira", "João Exemplo Pereira"], ["http://dados.ufrrj.br/recurso/docente_ana_silva", "Profa. Dra. Ana Exemplo da Silva", "http://dados.ufrrj.br/recurso/Pub2024DadosConectados", "Publicação sobre dados conectados e interoperabilidade acadêmica", "2024", "http://dados.ufrrj.br/recurso/docente_mariana_almeida", "Profa. Dra. Mariana Almeida"], ["http://dados.ufrrj.br/recurso/docente_mariana_almeida", "Profa. Dra. Mariana Almeida", "http://dados.ufrrj.br/recurso/Pub2024DadosConectados", "Publicação sobre dados conectados e interoperabilidade acadêmica", "2024", "http://dados.ufrrj.br/recurso/discente_joao_pereira", "João Exemplo Pereira"], ["http://dados.ufrrj.br/recurso/docente_mariana_almeida", "Profa. Dra. Mariana Almeida", "http://dados.ufrrj.br/recurso/Pub2024DadosConectados", "Publicação sobre dados conectados e interoperabilidade acadêmica", "2024", "http://dados.ufrrj.br/recurso/docente_ana_silva", "Profa. Dra. Ana Exemplo da Silva"], ["http://dados.ufrrj.br/recurso/docente_mariana_almeida", "Profa. Dra. Mariana Almeida", "http://dados.ufrrj.br/recurso/Pub2025IAeAcessibilidade", "Aplicações de inteligência artificial na acessibilidade de dados abertos universitários", "2025", "http://dados.ufrrj.br/recurso/discente_lucas_ferreira", "Lucas Ferreira"]]}, {"num": 6, "titulo": "Pessoas por Unidade Acadêmica", "pergunta": "Quais pessoas estão vinculadas a uma unidade acadêmica específica (ICE)?", "sparql": "# Consulta 6: Quais pessoas estão vinculadas a uma unidade acadêmica específica, independentemente de serem docentes ou discentes?\nPREFIX : <http://dados.ufrrj.br/ontologia/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n\nSELECT DISTINCT ?unidade ?nomeUnidade ?tipoPessoa ?pessoa ?nomePessoa ?emailInstitucional\nWHERE {\n    # Unidade acadêmica selecionada (ex: Instituto de Ciências Exatas)\n    VALUES ?unidade { <http://dados.ufrrj.br/recurso/InstitutoCienciasExatas> }\n    ?unidade rdfs:label ?nomeUnidade .\n    \n    # Pessoa vinculada diretamente ou por vínculo institucional\n    ?pessoa :pertenceA ?unidade ;\n            a ?tipoPessoa ;\n            :nomeCompleto ?nomePessoa ;\n            :emailInstitucional ?emailInstitucional .\n            \n    # Filtra apenas os tipos de pessoas acadêmicas\n    FILTER (?tipoPessoa IN (:Docente, :Discente))\n}\nORDER BY ?tipoPessoa ?nomePessoa", "vars": ["unidade", "nomeUnidade", "tipoPessoa", "pessoa", "nomePessoa", "emailInstitucional"], "rows": [["http://dados.ufrrj.br/recurso/InstitutoCienciasExatas", "Instituto de Ciências Exatas (ICE)", "http://dados.ufrrj.br/ontologia/Discente", "http://dados.ufrrj.br/recurso/discente_joao_pereira", "João Exemplo Pereira", "joao.pereira@ufrrj.br"], ["http://dados.ufrrj.br/recurso/InstitutoCienciasExatas", "Instituto de Ciências Exatas (ICE)", "http://dados.ufrrj.br/ontologia/Discente", "http://dados.ufrrj.br/recurso/discente_lucas_ferreira", "Lucas Ferreira", "lucas.ferreira@ufrrj.br"], ["http://dados.ufrrj.br/recurso/InstitutoCienciasExatas", "Instituto de Ciências Exatas (ICE)", "http://dados.ufrrj.br/ontologia/Docente", "http://dados.ufrrj.br/recurso/docente_ana_silva", "Profa. Dra. Ana Exemplo da Silva", "anaexemplo@ufrrj.br"], ["http://dados.ufrrj.br/recurso/InstitutoCienciasExatas", "Instituto de Ciências Exatas (ICE)", "http://dados.ufrrj.br/ontologia/Docente", "http://dados.ufrrj.br/recurso/docente_mariana_almeida", "Profa. Dra. Mariana Almeida", "mariana.almeida@ufrrj.br"]]}];
+
+    function mostrarConsulta(num) {
+      document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+        if (idx === num - 1) btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+
+      const c = consultas.find(item => item.num === num);
+      if (!c) return;
+
+      document.getElementById('q-titulo').innerText = 'Consulta 0' + c.num + ': ' + c.titulo;
+      document.getElementById('q-pergunta').innerText = '"' + c.pergunta + '"';
+      document.getElementById('q-badge').innerText = c.rows.length + ' registros retornados';
+      document.getElementById('q-sparql').innerText = c.sparql;
+
+      let html = '<table class="result-tbl"><thead><tr>';
+      c.vars.forEach(v => {
+        html += '<th>' + v + '</th>';
+      });
+      html += '</tr></thead><tbody>';
+
+      c.rows.forEach(r => {
+        html += '<tr>';
+        r.forEach(cel => {
+          if (cel.startsWith('http://dados.ufrrj.br/recurso/')) {
+            const id = cel.split('/').pop();
+            html += '<td><code>ufrrj:' + id + '</code></td>';
+          } else if (cel.startsWith('http')) {
+            html += '<td><a href="' + cel + '" target="_blank">' + cel + '</a></td>';
+          } else {
+            html += '<td>' + cel + '</td>';
+          }
+        });
+        html += '</tr>';
+      });
+      html += '</tbody></table>';
+
+      document.getElementById('q-tabela-container').innerHTML = html;
+    }
+
+    // Inicia com a primeira consulta
+    mostrarConsulta(1);
+  </script>
+</body>
+</html>

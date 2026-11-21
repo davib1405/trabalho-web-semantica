@@ -17,6 +17,29 @@ RESULTADOS_DIR = os.path.join(CONSULTAS_DIR, "resultados")
 
 os.makedirs(RESULTADOS_DIR, exist_ok=True)
 
+EXPLACOES = {
+    1: """* **`:Docente` (Classe):** Subclasse de `:Pessoa` que restringe o escopo aos professores universitários.
+* **`:lotadoEm` (Object Property):** Subpropriedade de `:pertenceA`. Liga cada docente ao seu departamento acadêmico de lotação.
+* **`:nomeCompleto` (Datatype Property):** Retorna o nome civil e titulação do docente.
+* **`rdfs:label` (Annotation Property):** Recupera a identificação legível do departamento.""",
+    2: """* **`:Discente` (Classe):** Instâncias de alunos com vínculo de matrícula na universidade.
+* **`:Curso` (Classe):** Especialização de `schema:Course` que modela a graduação ofertada.
+* **`:matriculadoEm` (Object Property):** Subpropriedade de `:pertenceA`. Conecta o aluno ao curso.
+* **`:anoIngresso` e `:periodoAtual` (Datatype Properties):** Literais que indicam o tempo e a fase acadêmica.
+* **Cláusula `VALUES`:** Parametriza a consulta para filtrar qualquer curso desejado.""",
+    3: """* **`:AreaPesquisa` / `skos:Concept` (Classe):** Modela áreas do conhecimento como conceitos de vocabulário controlado SKOS.
+* **`:atuaEmArea` (Object Property):** Relaciona a pessoa às suas linhas de pesquisa ou interesses científicos.
+* **`skos:prefLabel` (Annotation Property):** Rótulo preferencial em português (`FILTER (LANG(?nomeArea) = "pt")`).""",
+    4: """* **Relação Tripartida de Entidades:** Conecta três classes distintas: `:Docente`, `:Discente` e `:Projeto`.
+* **`:participaDeProjeto` (Object Property):** Propriedade que converge a atuação de docentes e alunos na mesma iniciativa científica. Como `:coordenaProjeto` é subpropriedade de `:participaDeProjeto`, a coordenação é inferida como participação direta.""",
+    5: """* **`:Publicacao` (Classe):** Alinhada a `dcterms:BibliographicResource` e `schema:ScholarlyArticle`.
+* **`:temAutor` (Object Property):** Relaciona o artefato científico a todas as pessoas autoras.
+* **`FILTER (?coautor != ?docente)`:** Operador de negação de igualdade por URI para impedir auto-associação de coautoria.""",
+    6: """* **Polimorfismo de `:Pessoa`:** Trata instâncias de `:Docente` e `:Discente` sob o mesmo padrão de grafo.
+* **`:pertenceA` (Object Property):** Propriedade ancestral compartilhada na taxonomia institucional.
+* **`FILTER (?tipoPessoa IN (:Docente, :Discente))`:** Filtra a instanciação direta para categorizar explicitamente o papel de cada pessoa encontrada no Instituto de Ciências Exatas (ICE)."""
+}
+
 def carregar_grafo():
     g = rdflib.Graph()
     print("[1/3] Carregando ontologia OWL...")
@@ -102,7 +125,10 @@ def executar_consultas(g):
                 relatorio_geral.append("| " + " | ".join(val.replace("|", "/") for val in row_data) + " |")
         else:
             relatorio_geral.append("_Nenhum registro retornado._")
-        relatorio_geral.append("\n---\n")
+        
+        relatorio_geral.append("\n### Explicação das Classes e Propriedades Utilizadas\n")
+        relatorio_geral.append(EXPLACOES.get(i, ""))
+        relatorio_geral.append("\n\n---\n")
 
         print(f" -> Consulta 0{i} concluída com sucesso ({len(linhas)} linhas geradas).")
 

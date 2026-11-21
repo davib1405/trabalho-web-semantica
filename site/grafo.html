@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Grafo de Conhecimento Interativo | UFRRJ - Web Semântica</title>
+  <link rel="stylesheet" href="estilos.css">
+  <style>
+    #canvas-grafo {
+      width: 100%;
+      height: 600px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: #f8fafc;
+      display: block;
+      cursor: grab;
+    }
+    .legend-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  
+  <nav style="background: #1e293b; padding: 0.75rem 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <div style="font-weight: bold; color: #f8fafc; font-size: 1.05rem;">
+      <a href="index.html" style="color: #38bdf8; text-decoration: none;">UFRRJ &bull; Web Semântica &amp; LOD</a>
+    </div>
+    <div style="display: flex; gap: 1.25rem; font-size: 0.95rem; align-items: center;">
+      <a href="index.html" style="color: #e2e8f0; text-decoration: none; font-weight: 500;">Início</a>
+      <a href="consultas.html" style="color: #e2e8f0; text-decoration: none; font-weight: 500;">Consultas SPARQL</a>
+      <a href="grafo.html" style="color: #e2e8f0; text-decoration: none; font-weight: 500;">Grafo Visual</a>
+      <a href="../ontologia/dados.ttl" target="_blank" style="color: #38bdf8; text-decoration: none; font-weight: 600; background: rgba(56,189,248,0.15); padding: 4px 10px; border-radius: 4px;">RDF Turtle (.ttl)</a>
+      <a href="../ontologia/ontologia.owl" target="_blank" style="color: #a78bfa; text-decoration: none; font-weight: 600; background: rgba(167,139,250,0.15); padding: 4px 10px; border-radius: 4px;">Ontologia OWL</a>
+    </div>
+  </nav>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <h1 class="site-title">Grafo de Conhecimento Interativo (LOD Network)</h1>
+      <p class="site-subtitle">Visualização topológica das entidades acadêmicas e conexões da Web Semântica</p>
+    </div>
+  </header>
+
+  <main style="max-width: 1100px; margin: 2rem auto; padding: 0 1rem;">
+    <section class="card" style="margin-bottom: 1.5rem;">
+      <h2 style="margin-top: 0;">Explore os Vínculos Semânticos</h2>
+      <p style="color: #64748b;">
+        Este mapa renderiza o grafo RDF integrado da UFRRJ. Você pode <strong>arrastar os nós</strong> com o mouse para reposicioná-los e inspecionar a malha de relacionamentos entre professores, discentes, unidades acadêmicas, projetos e recursos de Linked Open Data externos.
+      </p>
+      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem;">
+        <span class="legend-tag" style="background: #e0f2fe; color: #0369a1;">● Docentes (Ana Silva, Mariana Almeida)</span>
+        <span class="legend-tag" style="background: #f0fdf4; color: #15803d;">● Discentes (João Pereira, Lucas Ferreira)</span>
+        <span class="legend-tag" style="background: #fef3c7; color: #b45309;">● Unidades e Cursos (ICE, DCC, BSI)</span>
+        <span class="legend-tag" style="background: #f3e8ff; color: #7e22ce;">● Projetos de Pesquisa</span>
+        <span class="legend-tag" style="background: #ffe4e6; color: #be123c;">● LOD Externo (Wikidata, DBpedia, ORCID)</span>
+      </div>
+    </section>
+
+    <div class="card" style="padding: 10px;">
+      <canvas id="canvas-grafo" width="1050" height="600"></canvas>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>Grafo gerado a partir de <code>ontologia/dados.ttl</code> e <code>ontologia/ontologia.owl</code> &bull; UFRRJ</p>
+  </footer>
+
+  <script>
+    const canvas = document.getElementById('canvas-grafo');
+    const ctx = canvas.getContext('2d');
+
+    const nodes = [
+      { id: 'ufrrj', label: 'UFRRJ', type: 'unidade', x: 525, y: 70, r: 28, color: '#f59e0b' },
+      { id: 'ice', label: 'ICE', type: 'unidade', x: 525, y: 170, r: 24, color: '#f59e0b' },
+      { id: 'dcc', label: 'Depto Computação', type: 'unidade', x: 340, y: 250, r: 22, color: '#f59e0b' },
+      { id: 'bsi', label: 'Curso BSI', type: 'unidade', x: 710, y: 250, r: 22, color: '#f59e0b' },
+      
+      { id: 'ana', label: 'Dra. Ana Silva', type: 'docente', x: 230, y: 350, r: 24, color: '#0284c7' },
+      { id: 'mariana', label: 'Dra. Mariana Almeida', type: 'docente', x: 420, y: 350, r: 24, color: '#0284c7' },
+      
+      { id: 'joao', label: 'João Pereira', type: 'discente', x: 640, y: 350, r: 22, color: '#16a34a' },
+      { id: 'lucas', label: 'Lucas Ferreira', type: 'discente', x: 820, y: 350, r: 22, color: '#16a34a' },
+
+      { id: 'proj_dados', label: 'Proj. Dados Abertos', type: 'projeto', x: 450, y: 470, r: 24, color: '#9333ea' },
+      { id: 'proj_edu', label: 'Proj. Educação Digital', type: 'projeto', x: 700, y: 470, r: 24, color: '#9333ea' },
+
+      { id: 'pub2024', label: 'Pub. 2024 (Conectados)', type: 'pub', x: 300, y: 470, r: 20, color: '#6366f1' },
+
+      { id: 'wkd_ufrrj', label: 'Wikidata (UFRRJ Q3550293)', type: 'lod', x: 780, y: 70, r: 20, color: '#e11d48' },
+      { id: 'orcid_ana', label: 'ORCID (Ana Silva)', type: 'lod', x: 90, y: 350, r: 18, color: '#e11d48' },
+      { id: 'wkd_ia', label: 'Wikidata (IA Q11660)', type: 'lod', x: 920, y: 470, r: 18, color: '#e11d48' }
+    ];
+
+    const edges = [
+      { from: 'ice', to: 'ufrrj', label: ':pertenceA' },
+      { from: 'dcc', to: 'ice', label: ':vinculadoA' },
+      { from: 'bsi', to: 'ice', label: ':vinculadoA' },
+      
+      { from: 'ana', to: 'dcc', label: ':lotadoEm' },
+      { from: 'mariana', to: 'dcc', label: ':lotadoEm' },
+
+      { from: 'joao', to: 'bsi', label: ':matriculadoEm' },
+      { from: 'lucas', to: 'bsi', label: ':matriculadoEm' },
+
+      { from: 'ana', to: 'proj_dados', label: ':coordena' },
+      { from: 'mariana', to: 'proj_dados', label: ':participaDe' },
+      { from: 'joao', to: 'proj_dados', label: ':participaDe' },
+      { from: 'lucas', to: 'proj_dados', label: ':participaDe' },
+
+      { from: 'mariana', to: 'proj_edu', label: ':coordena' },
+      { from: 'lucas', to: 'proj_edu', label: ':participaDe' },
+
+      { from: 'ana', to: 'joao', label: ':orienta' },
+      { from: 'mariana', to: 'lucas', label: ':orienta' },
+
+      { from: 'ana', to: 'pub2024', label: ':autorDe' },
+      { from: 'mariana', to: 'pub2024', label: ':autorDe' },
+      { from: 'joao', to: 'pub2024', label: ':autorDe' },
+
+      { from: 'ufrrj', to: 'wkd_ufrrj', label: 'owl:sameAs' },
+      { from: 'ana', to: 'orcid_ana', label: 'schema:sameAs' },
+      { from: 'proj_edu', to: 'wkd_ia', label: 'skos:match' }
+    ];
+
+    let draggedNode = null;
+    let dragOffsetX = 0;
+    let dragOffsetY = 0;
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Edges
+      edges.forEach(e => {
+        const src = nodes.find(n => n.id === e.from);
+        const tgt = nodes.find(n => n.id === e.to);
+        if (!src || !tgt) return;
+
+        ctx.beginPath();
+        ctx.moveTo(src.x, src.y);
+        ctx.lineTo(tgt.x, tgt.y);
+        ctx.strokeStyle = e.label.includes('sameAs') || e.label.includes('match') ? '#f43f5e' : '#94a3b8';
+        ctx.lineWidth = e.label.includes('sameAs') ? 2 : 1.5;
+        if (e.label.includes('sameAs') || e.label.includes('orienta')) {
+          ctx.setLineDash([4, 4]);
+        } else {
+          ctx.setLineDash([]);
+        }
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Label
+        const midX = (src.x + tgt.x) / 2;
+        const midY = (src.y + tgt.y) / 2;
+        ctx.fillStyle = '#475569';
+        ctx.font = '10px sans-serif';
+        ctx.fillText(e.label, midX + 3, midY - 3);
+      });
+
+      // Nodes
+      nodes.forEach(n => {
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+        ctx.fillStyle = n.color;
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        ctx.fillStyle = '#0f172a';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(n.label, n.x, n.y + n.r + 14);
+      });
+    }
+
+    canvas.addEventListener('mousedown', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+
+      nodes.forEach(n => {
+        const dist = Math.hypot(n.x - mouseX, n.y - mouseY);
+        if (dist <= n.r) {
+          draggedNode = n;
+          dragOffsetX = n.x - mouseX;
+          dragOffsetY = n.y - mouseY;
+          canvas.style.cursor = 'grabbing';
+        }
+      });
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+      if (!draggedNode) return;
+      const rect = canvas.getBoundingClientRect();
+      draggedNode.x = e.clientX - rect.left + dragOffsetX;
+      draggedNode.y = e.clientY - rect.top + dragOffsetY;
+      draw();
+    });
+
+    window.addEventListener('mouseup', () => {
+      draggedNode = null;
+      canvas.style.cursor = 'grab';
+    });
+
+    draw();
+  </script>
+</body>
+</html>
