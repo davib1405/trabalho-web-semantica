@@ -30,8 +30,9 @@ NAVBAR_HTML = """
       <a href="index.html" style="color: #e2e8f0; text-decoration: none; font-weight: 500;">Início</a>
       <a href="consultas.html" style="color: #e2e8f0; text-decoration: none; font-weight: 500;">Consultas SPARQL</a>
       <a href="grafo.html" style="color: #e2e8f0; text-decoration: none; font-weight: 500;">Grafo Visual</a>
-      <a href="../ontologia/dados.ttl" target="_blank" style="color: #38bdf8; text-decoration: none; font-weight: 600; background: rgba(56,189,248,0.15); padding: 4px 10px; border-radius: 4px;">RDF Turtle (.ttl)</a>
-      <a href="../ontologia/ontologia.owl" target="_blank" style="color: #a78bfa; text-decoration: none; font-weight: 600; background: rgba(167,139,250,0.15); padding: 4px 10px; border-radius: 4px;">Ontologia OWL</a>
+      <a href="ontologia/dados.ttl" target="_blank" style="color: #38bdf8; text-decoration: none; font-weight: 600; background: rgba(56,189,248,0.15); padding: 4px 10px; border-radius: 4px;">RDF Turtle (.ttl)</a>
+      <a href="ontologia/ontologia.owl" target="_blank" style="color: #a78bfa; text-decoration: none; font-weight: 600; background: rgba(167,139,250,0.15); padding: 4px 10px; border-radius: 4px;">Ontologia OWL</a>
+      <a href="https://github.com/davib1405/trabalho-web-semantica" target="_blank" style="color: #cbd5e1; text-decoration: none; font-weight: 500;">GitHub &rarr;</a>
     </div>
   </nav>
 """
@@ -45,8 +46,9 @@ NAVBAR_SUBDIR_HTML = """
       <a href="../index.html" style="color: #e2e8f0; text-decoration: none; font-weight: 500;">Início</a>
       <a href="../consultas.html" style="color: #e2e8f0; text-decoration: none; font-weight: 500;">Consultas SPARQL</a>
       <a href="../grafo.html" style="color: #e2e8f0; text-decoration: none; font-weight: 500;">Grafo Visual</a>
-      <a href="../../ontologia/dados.ttl" target="_blank" style="color: #38bdf8; text-decoration: none; font-weight: 600; background: rgba(56,189,248,0.15); padding: 4px 10px; border-radius: 4px;">RDF Turtle (.ttl)</a>
-      <a href="../../ontologia/ontologia.owl" target="_blank" style="color: #a78bfa; text-decoration: none; font-weight: 600; background: rgba(167,139,250,0.15); padding: 4px 10px; border-radius: 4px;">Ontologia OWL</a>
+      <a href="../ontologia/dados.ttl" target="_blank" style="color: #38bdf8; text-decoration: none; font-weight: 600; background: rgba(56,189,248,0.15); padding: 4px 10px; border-radius: 4px;">RDF Turtle (.ttl)</a>
+      <a href="../ontologia/ontologia.owl" target="_blank" style="color: #a78bfa; text-decoration: none; font-weight: 600; background: rgba(167,139,250,0.15); padding: 4px 10px; border-radius: 4px;">Ontologia OWL</a>
+      <a href="https://github.com/davib1405/trabalho-web-semantica" target="_blank" style="color: #cbd5e1; text-decoration: none; font-weight: 500;">GitHub &rarr;</a>
     </div>
   </nav>
 """
@@ -368,7 +370,7 @@ def render_docente(p):
         <section class="card" style="background: #f8fafc; border: 1px dashed #cbd5e1;">
           <h2>Metadados Semânticos</h2>
           <p style="font-size: 0.85rem; color: #475569;">Esta página contém marcação estruturada em <strong>JSON-LD</strong> e mapeamento RDF Turtle na ontologia institucional.</p>
-          <p style="margin-top: 8px;"><a href="../../ontologia/dados.ttl" style="font-weight: 600; color: #0284c7;">Ver Dados em RDF Turtle (.ttl) &rarr;</a></p>
+          <p style="margin-top: 8px;"><a href="../ontologia/dados.ttl" style="font-weight: 600; color: #0284c7;">Ver Dados em RDF Turtle (.ttl) &rarr;</a></p>
         </section>
       </aside>
     </div>
@@ -500,7 +502,7 @@ def render_discente(p):
         <section class="card" style="background: #f8fafc; border: 1px dashed #cbd5e1;">
           <h2>Metadados Semânticos</h2>
           <p style="font-size: 0.85rem; color: #475569;">Esta página contém marcação estruturada em <strong>JSON-LD</strong> e mapeamento RDF Turtle na ontologia institucional.</p>
-          <p style="margin-top: 8px;"><a href="../../ontologia/dados.ttl" style="font-weight: 600; color: #0284c7;">Ver Dados em RDF Turtle (.ttl) &rarr;</a></p>
+          <p style="margin-top: 8px;"><a href="../ontologia/dados.ttl" style="font-weight: 600; color: #0284c7;">Ver Dados em RDF Turtle (.ttl) &rarr;</a></p>
         </section>
       </aside>
     </div>
@@ -578,7 +580,7 @@ def render_index(docentes, discentes):
       <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
         <a href="consultas.html" style="background: #38bdf8; color: #0f172a; padding: 10px 18px; border-radius: 6px; font-weight: bold; text-decoration: none;">🔍 Ver Consultas SPARQL Interativas</a>
         <a href="grafo.html" style="background: rgba(255,255,255,0.2); color: white; padding: 10px 18px; border-radius: 6px; font-weight: bold; text-decoration: none; border: 1px solid white;">🕸️ Explorar Grafo Visual</a>
-        <a href="../ontologia/dados.ttl" style="background: white; color: #1e3c72; padding: 10px 18px; border-radius: 6px; font-weight: bold; text-decoration: none;">💾 Baixar RDF Turtle (.ttl)</a>
+        <a href="ontologia/dados.ttl" style="background: white; color: #1e3c72; padding: 10px 18px; border-radius: 6px; font-weight: bold; text-decoration: none;">💾 Baixar RDF Turtle (.ttl)</a>
       </div>
     </section>
 

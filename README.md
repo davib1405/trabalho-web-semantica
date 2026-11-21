@@ -5,6 +5,11 @@
 **Docente:** Prof. Dr. Tiago Cruz de França  
 **Discente / Autor:** David Barros da Rosa Filho  
 
+* 🌐 **Endereço Público do Site (GitHub Pages):** [https://davib1405.github.io/trabalho-web-semantica/](https://davib1405.github.io/trabalho-web-semantica/)
+* 📦 **Repositório Oficial no GitHub:** [https://github.com/davib1405/trabalho-web-semantica](https://github.com/davib1405/trabalho-web-semantica)
+* 🔍 **Consultas SPARQL Interativas Online:** [https://davib1405.github.io/trabalho-web-semantica/consultas.html](https://davib1405.github.io/trabalho-web-semantica/consultas.html)
+* 🕸️ **Grafo Semântico Interativo Online:** [https://davib1405.github.io/trabalho-web-semantica/grafo.html](https://davib1405.github.io/trabalho-web-semantica/grafo.html)  
+
 ---
 
 ## 1. Visão Geral do Projeto

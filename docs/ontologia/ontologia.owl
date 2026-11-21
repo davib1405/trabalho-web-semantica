@@ -1,0 +1,242 @@
+@prefix : <http://dados.ufrrj.br/ontologia/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix schema: <http://schema.org/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<http://dados.ufrrj.br/ontologia/> a owl:Ontology ;
+    dcterms:title "Ontologia de Perfis Acadêmicos da UFRRJ"@pt ;
+    dcterms:description "Ontologia de aplicação desenvolvida para modelagem, publicação e interligação semântica de perfis de docentes e discentes universitários no contexto de Linked Open Data."@pt ;
+    dcterms:creator "David Barros da Rosa Filho" ;
+    dcterms:publisher "Universidade Federal Rural do Rio de Janeiro - Departamento de Computação" ;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
+    owl:versionInfo "1.0.0" .
+
+#################################################################
+#    Classes
+#################################################################
+
+:Pessoa a owl:Class ;
+    rdfs:subClassOf foaf:Person, schema:Person ;
+    rdfs:label "Pessoa Acadêmica"@pt, "Academic Person"@en ;
+    rdfs:comment "Indivíduo com vínculo ou atuação formal na comunidade universitária."@pt .
+
+:Docente a owl:Class ;
+    rdfs:subClassOf :Pessoa ;
+    rdfs:label "Docente"@pt, "Professor/Faculty Member"@en ;
+    rdfs:comment "Pessoa com vínculo institucional de magistério superior na universidade."@pt .
+
+:Discente a owl:Class ;
+    rdfs:subClassOf :Pessoa ;
+    rdfs:label "Discente"@pt, "Student"@en ;
+    rdfs:comment "Pessoa regularmente matriculada em curso de graduação ou pós-graduação da instituição."@pt .
+
+:UnidadeAcademica a owl:Class ;
+    rdfs:subClassOf schema:Organization, foaf:Organization ;
+    rdfs:label "Unidade Acadêmica"@pt ;
+    rdfs:comment "Subdivisão organizacional da universidade, como institutos e departamentos."@pt .
+
+:Instituto a owl:Class ;
+    rdfs:subClassOf :UnidadeAcademica ;
+    rdfs:label "Instituto"@pt ;
+    rdfs:comment "Unidade acadêmica que congrega múltiplos departamentos e cursos."@pt .
+
+:Departamento a owl:Class ;
+    rdfs:subClassOf :UnidadeAcademica ;
+    rdfs:label "Departamento Acadêmico"@pt ;
+    rdfs:comment "Unidade básica de lotação docente e gestão de disciplinas."@pt .
+
+:Curso a owl:Class ;
+    rdfs:subClassOf schema:Course ;
+    rdfs:label "Curso Universitário"@pt ;
+    rdfs:comment "Curso de graduação ou pós-graduação oferecido pela instituição."@pt .
+
+:AreaPesquisa a owl:Class ;
+    rdfs:subClassOf skos:Concept ;
+    rdfs:label "Área de Pesquisa ou Interesse"@pt ;
+    rdfs:comment "Conceito que representa um domínio temático de investigação acadêmica."@pt .
+
+:Projeto a owl:Class ;
+    rdfs:subClassOf foaf:Project, schema:ResearchProject ;
+    rdfs:label "Projeto Acadêmico"@pt ;
+    rdfs:comment "Atividade formal de pesquisa, ensino ou extensão."@pt .
+
+:ProjetoPesquisa a owl:Class ;
+    rdfs:subClassOf :Projeto ;
+    rdfs:label "Projeto de Pesquisa"@pt ;
+    rdfs:comment "Projeto com foco específico em investigação científica e inovação."@pt .
+
+:GrupoPesquisa a owl:Class ;
+    rdfs:subClassOf schema:ResearchProject ;
+    rdfs:label "Grupo de Pesquisa"@pt ;
+    rdfs:comment "Coletivo de pesquisadores, docentes e discentes voltado a linhas de pesquisa afins."@pt .
+
+:Publicacao a owl:Class ;
+    rdfs:subClassOf dcterms:BibliographicResource, schema:ScholarlyArticle ;
+    rdfs:label "Publicação Acadêmica"@pt ;
+    rdfs:comment "Artigo, livro, capítulo ou trabalho acadêmico publicado."@pt .
+
+:Disciplina a owl:Class ;
+    rdfs:subClassOf schema:Course ;
+    rdfs:label "Disciplina"@pt ;
+    rdfs:comment "Componente curricular ministrado na graduação ou pós-graduação."@pt .
+
+:FormacaoAcademica a owl:Class ;
+    rdfs:subClassOf schema:EducationalOccupationalCredential ;
+    rdfs:label "Formação Acadêmica"@pt ;
+    rdfs:comment "Registro de titulação ou formação educacional obtida pela pessoa."@pt .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+:pertenceA a owl:ObjectProperty ;
+    rdfs:domain :Pessoa ;
+    rdfs:range :UnidadeAcademica ;
+    rdfs:label "pertence a"@pt ;
+    rdfs:comment "Associa uma pessoa a uma unidade acadêmica (instituto ou departamento)."@pt .
+
+:lotadoEm a owl:ObjectProperty ;
+    rdfs:subPropertyOf :pertenceA ;
+    rdfs:domain :Docente ;
+    rdfs:range :Departamento ;
+    rdfs:label "lotado em"@pt ;
+    rdfs:comment "Indica o departamento de lotação do docente."@pt .
+
+:vinculadoAInstituto a owl:ObjectProperty ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (:Departamento :Curso) ] ;
+    rdfs:range :Instituto ;
+    rdfs:label "vinculado ao instituto"@pt ;
+    rdfs:comment "Conecta um departamento ou curso ao seu instituto mantenedor."@pt .
+
+:matriculadoEm a owl:ObjectProperty ;
+    rdfs:subPropertyOf :pertenceA ;
+    rdfs:domain :Discente ;
+    rdfs:range :Curso ;
+    rdfs:label "matriculado em"@pt ;
+    rdfs:comment "Conecta o discente ao curso em que está regularmente matriculado."@pt .
+
+:cursoOferecidoPor a owl:ObjectProperty ;
+    rdfs:domain :Curso ;
+    rdfs:range :UnidadeAcademica ;
+    rdfs:label "curso oferecido por"@pt .
+
+:atuaEmArea a owl:ObjectProperty ;
+    rdfs:domain :Pessoa ;
+    rdfs:range :AreaPesquisa ;
+    rdfs:label "atua na área"@pt ;
+    rdfs:comment "Associa a pessoa a uma área temática de pesquisa ou interesse."@pt .
+
+:participaDeProjeto a owl:ObjectProperty ;
+    rdfs:domain :Pessoa ;
+    rdfs:range :Projeto ;
+    rdfs:label "participa do projeto"@pt ;
+    rdfs:comment "Associa qualquer membro acadêmico (docente ou discente) a um projeto."@pt .
+
+:coordenaProjeto a owl:ObjectProperty ;
+    rdfs:subPropertyOf :participaDeProjeto ;
+    rdfs:domain :Docente ;
+    rdfs:range :Projeto ;
+    rdfs:label "coordena o projeto"@pt ;
+    rdfs:comment "Identifica o docente responsável pela coordenação do projeto."@pt .
+
+:membroDeGrupo a owl:ObjectProperty ;
+    rdfs:domain :Pessoa ;
+    rdfs:range :GrupoPesquisa ;
+    rdfs:label "é membro do grupo de pesquisa"@pt .
+
+:autorDe a owl:ObjectProperty ;
+    owl:inverseOf :temAutor ;
+    rdfs:domain :Pessoa ;
+    rdfs:range :Publicacao ;
+    rdfs:label "é autor de"@pt ;
+    rdfs:comment "Relaciona a pessoa às suas publicações acadêmicas."@pt .
+
+:temAutor a owl:ObjectProperty ;
+    rdfs:domain :Publicacao ;
+    rdfs:range :Pessoa ;
+    rdfs:label "tem como autor"@pt ;
+    rdfs:comment "Relaciona a publicação aos seus coautores."@pt .
+
+:orienta a owl:ObjectProperty ;
+    rdfs:domain :Docente ;
+    rdfs:range :Discente ;
+    rdfs:label "orienta"@pt ;
+    rdfs:comment "Indica relação de orientação acadêmica, de iniciação científica ou pós-graduação."@pt .
+
+:leciona a owl:ObjectProperty ;
+    rdfs:domain :Docente ;
+    rdfs:range :Disciplina ;
+    rdfs:label "leciona a disciplina"@pt ;
+    rdfs:comment "Indica as disciplinas ministradas pelo docente."@pt .
+
+:possuiFormacao a owl:ObjectProperty ;
+    rdfs:domain :Pessoa ;
+    rdfs:range :FormacaoAcademica ;
+    rdfs:label "possui formação"@pt .
+
+#################################################################
+#    Data Properties
+#################################################################
+
+:nomeCompleto a owl:DatatypeProperty ;
+    rdfs:subPropertyOf foaf:name, schema:name ;
+    rdfs:domain :Pessoa ;
+    rdfs:range xsd:string ;
+    rdfs:label "nome completo"@pt .
+
+:cargoOuFuncao a owl:DatatypeProperty ;
+    rdfs:domain :Pessoa ;
+    rdfs:range xsd:string ;
+    rdfs:label "cargo ou função acadêmica"@pt .
+
+:titulacao a owl:DatatypeProperty ;
+    rdfs:domain :Docente ;
+    rdfs:range xsd:string ;
+    rdfs:label "titulação acadêmica máxima"@pt .
+
+:anoIngresso a owl:DatatypeProperty ;
+    rdfs:domain :Discente ;
+    rdfs:range xsd:integer ;
+    rdfs:label "ano de ingresso"@pt .
+
+:periodoAtual a owl:DatatypeProperty ;
+    rdfs:domain :Discente ;
+    rdfs:range xsd:string ;
+    rdfs:label "período atual"@pt .
+
+:emailInstitucional a owl:DatatypeProperty ;
+    rdfs:subPropertyOf foaf:mbox, schema:email ;
+    rdfs:domain :Pessoa ;
+    rdfs:range xsd:string ;
+    rdfs:label "e-mail institucional"@pt .
+
+:biografiaResumida a owl:DatatypeProperty ;
+    rdfs:domain :Pessoa ;
+    rdfs:range xsd:string ;
+    rdfs:label "biografia ou apresentação resumida"@pt .
+
+:anoPublicacao a owl:DatatypeProperty ;
+    rdfs:domain :Publicacao ;
+    rdfs:range xsd:integer ;
+    rdfs:label "ano de publicação"@pt .
+
+:linkLattes a owl:DatatypeProperty ;
+    rdfs:domain :Pessoa ;
+    rdfs:range xsd:anyURI ;
+    rdfs:label "link do currículo Lattes"@pt .
+
+:linkOrcid a owl:DatatypeProperty ;
+    rdfs:domain :Pessoa ;
+    rdfs:range xsd:anyURI ;
+    rdfs:label "identificador ORCID"@pt .
+
+:linkPaginaPessoal a owl:DatatypeProperty ;
+    rdfs:domain :Pessoa ;
+    rdfs:range xsd:anyURI ;
+    rdfs:label "link da página pessoal"@pt .
