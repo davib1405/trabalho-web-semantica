@@ -1,0 +1,17 @@
+# Consulta 2: Quais discentes pertencem a determinado curso?
+PREFIX : <http://dados.ufrrj.br/ontologia/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?discente ?nomeDiscente ?curso ?nomeCurso ?anoIngresso ?periodoAtual
+WHERE {
+    # Filtro ou busca para o curso de Sistemas de Informação
+    VALUES ?curso { <http://dados.ufrrj.br/recurso/CursoSistemasInformacao> }
+    ?curso rdfs:label ?nomeCurso .
+    
+    ?discente a :Discente ;
+              :nomeCompleto ?nomeDiscente ;
+              :matriculadoEm ?curso ;
+              :anoIngresso ?anoIngresso ;
+              :periodoAtual ?periodoAtual .
+}
+ORDER BY ?anoIngresso ?nomeDiscente

@@ -1,0 +1,20 @@
+# Consulta 6: Quais pessoas estão vinculadas a uma unidade acadêmica específica, independentemente de serem docentes ou discentes?
+PREFIX : <http://dados.ufrrj.br/ontologia/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?unidade ?nomeUnidade ?tipoPessoa ?pessoa ?nomePessoa ?emailInstitucional
+WHERE {
+    # Unidade acadêmica selecionada (ex: Instituto de Ciências Exatas)
+    VALUES ?unidade { <http://dados.ufrrj.br/recurso/InstitutoCienciasExatas> }
+    ?unidade rdfs:label ?nomeUnidade .
+    
+    # Pessoa vinculada diretamente ou por vínculo institucional
+    ?pessoa :pertenceA ?unidade ;
+            a ?tipoPessoa ;
+            :nomeCompleto ?nomePessoa ;
+            :emailInstitucional ?emailInstitucional .
+            
+    # Filtra apenas os tipos de pessoas acadêmicas
+    FILTER (?tipoPessoa IN (:Docente, :Discente))
+}
+ORDER BY ?tipoPessoa ?nomePessoa

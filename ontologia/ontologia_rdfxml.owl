@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+   xmlns:dcterms="http://purl.org/dc/terms/"
+   xmlns:owl="http://www.w3.org/2002/07/owl#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/Discente">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf rdf:resource="http://dados.ufrrj.br/ontologia/Pessoa"/>
+    <rdfs:label xml:lang="pt">Discente</rdfs:label>
+    <rdfs:label xml:lang="en">Student</rdfs:label>
+    <rdfs:comment xml:lang="pt">Pessoa regularmente matriculada em curso de graduação ou pós-graduação da instituição.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/ProjetoPesquisa">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf rdf:resource="http://dados.ufrrj.br/ontologia/Projeto"/>
+    <rdfs:label xml:lang="pt">Projeto de Pesquisa</rdfs:label>
+    <rdfs:comment xml:lang="pt">Projeto com foco específico em investigação científica e inovação.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/UnidadeAcademica">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf rdf:resource="http://schema.org/Organization"/>
+    <rdfs:subClassOf rdf:resource="http://xmlns.com/foaf/0.1/Organization"/>
+    <rdfs:label xml:lang="pt">Unidade Acadêmica</rdfs:label>
+    <rdfs:comment xml:lang="pt">Subdivisão organizacional da universidade, como institutos e departamentos.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/emailInstitucional">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:subPropertyOf rdf:resource="http://xmlns.com/foaf/0.1/mbox"/>
+    <rdfs:subPropertyOf rdf:resource="http://schema.org/email"/>
+    <rdfs:domain rdf:resource="http://dados.ufrrj.br/ontologia/Pessoa"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:label xml:lang="pt">e-mail institucional</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/membroDeGrupo">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:domain rdf:resource="http://dados.ufrrj.br/ontologia/Pessoa"/>
+    <rdfs:range rdf:resource="http://dados.ufrrj.br/ontologia/GrupoPesquisa"/>
+    <rdfs:label xml:lang="pt">é membro do grupo de pesquisa</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/cargoOuFuncao">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:domain rdf:resource="http://dados.ufrrj.br/ontologia/Pessoa"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:label xml:lang="pt">cargo ou função acadêmica</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/nomeCompleto">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:subPropertyOf rdf:resource="http://xmlns.com/foaf/0.1/name"/>
+    <rdfs:subPropertyOf rdf:resource="http://schema.org/name"/>
+    <rdfs:domain rdf:resource="http://dados.ufrrj.br/ontologia/Pessoa"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:label xml:lang="pt">nome completo</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
+    <dcterms:title xml:lang="pt">Ontologia de Perfis Acadêmicos da UFRRJ</dcterms:title>
+    <dcterms:description xml:lang="pt">Ontologia de aplicação desenvolvida para modelagem, publicação e interligação semântica de perfis de docentes e discentes universitários no contexto de Linked Open Data.</dcterms:description>
+    <dcterms:creator>David Barros da Rosa Filho</dcterms:creator>
+    <dcterms:publisher>Universidade Federal Rural do Rio de Janeiro - Departamento de Computação</dcterms:publisher>
+    <dcterms:license rdf:resource="https://creativecommons.org/licenses/by/4.0/"/>
+    <owl:versionInfo>1.0.0</owl:versionInfo>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/Disciplina">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf rdf:resource="http://schema.org/Course"/>
+    <rdfs:label xml:lang="pt">Disciplina</rdfs:label>
+    <rdfs:comment xml:lang="pt">Componente curricular ministrado na graduação ou pós-graduação.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/periodoAtual">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:domain rdf:resource="http://dados.ufrrj.br/ontologia/Discente"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:label xml:lang="pt">período atual</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/Publicacao">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf rdf:resource="http://purl.org/dc/terms/BibliographicResource"/>
+    <rdfs:subClassOf rdf:resource="http://schema.org/ScholarlyArticle"/>
+    <rdfs:label xml:lang="pt">Publicação Acadêmica</rdfs:label>
+    <rdfs:comment xml:lang="pt">Artigo, livro, capítulo ou trabalho acadêmico publicado.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/Instituto">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf rdf:resource="http://dados.ufrrj.br/ontologia/UnidadeAcademica"/>
+    <rdfs:label xml:lang="pt">Instituto</rdfs:label>
+    <rdfs:comment xml:lang="pt">Unidade acadêmica que congrega múltiplos departamentos e cursos.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/anoPublicacao">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:domain rdf:resource="http://dados.ufrrj.br/ontologia/Publicacao"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    <rdfs:label xml:lang="pt">ano de publicação</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/Pessoa">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+    <rdfs:subClassOf rdf:resource="http://schema.org/Person"/>
+    <rdfs:label xml:lang="pt">Pessoa Acadêmica</rdfs:label>
+    <rdfs:label xml:lang="en">Academic Person</rdfs:label>
+    <rdfs:comment xml:lang="pt">Indivíduo com vínculo ou atuação formal na comunidade universitária.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/Curso">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf rdf:resource="http://schema.org/Course"/>
+    <rdfs:label xml:lang="pt">Curso Universitário</rdfs:label>
+    <rdfs:comment xml:lang="pt">Curso de graduação ou pós-graduação oferecido pela instituição.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/Departamento">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf rdf:resource="http://dados.ufrrj.br/ontologia/UnidadeAcademica"/>
+    <rdfs:label xml:lang="pt">Departamento Acadêmico</rdfs:label>
+    <rdfs:comment xml:lang="pt">Unidade básica de lotação docente e gestão de disciplinas.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/leciona">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:domain rdf:resource="http://dados.ufrrj.br/ontologia/Docente"/>
+    <rdfs:range rdf:resource="http://dados.ufrrj.br/ontologia/Disciplina"/>
+    <rdfs:label xml:lang="pt">leciona a disciplina</rdfs:label>
+    <rdfs:comment xml:lang="pt">Indica as disciplinas ministradas pelo docente.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/coordenaProjeto">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:subPropertyOf rdf:resource="http://dados.ufrrj.br/ontologia/participaDeProjeto"/>
+    <rdfs:domain rdf:resource="http://dados.ufrrj.br/ontologia/Docente"/>
+    <rdfs:range rdf:resource="http://dados.ufrrj.br/ontologia/Projeto"/>
+    <rdfs:label xml:lang="pt">coordena o projeto</rdfs:label>
+    <rdfs:comment xml:lang="pt">Identifica o docente responsável pela coordenação do projeto.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/pertenceA">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:domain rdf:resource="http://dados.ufrrj.br/ontologia/Pessoa"/>
+    <rdfs:range rdf:resource="http://dados.ufrrj.br/ontologia/UnidadeAcademica"/>
+    <rdfs:label xml:lang="pt">pertence a</rdfs:label>
+    <rdfs:comment xml:lang="pt">Associa uma pessoa a uma unidade acadêmica (instituto ou departamento).</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/lotadoEm">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:subPropertyOf rdf:resource="http://dados.ufrrj.br/ontologia/pertenceA"/>
+    <rdfs:domain rdf:resource="http://dados.ufrrj.br/ontologia/Docente"/>
+    <rdfs:range rdf:resource="http://dados.ufrrj.br/ontologia/Departamento"/>
+    <rdfs:label xml:lang="pt">lotado em</rdfs:label>
+    <rdfs:comment xml:lang="pt">Indica o departamento de lotação do docente.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/orienta">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:domain rdf:resource="http://dados.ufrrj.br/ontologia/Docente"/>
+    <rdfs:range rdf:resource="http://dados.ufrrj.br/ontologia/Discente"/>
+    <rdfs:label xml:lang="pt">orienta</rdfs:label>
+    <rdfs:comment xml:lang="pt">Indica relação de orientação acadêmica, de iniciação científica ou pós-graduação.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/linkPaginaPessoal">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:domain rdf:resource="http://dados.ufrrj.br/ontologia/Pessoa"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#anyURI"/>
+    <rdfs:label xml:lang="pt">link da página pessoal</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/autorDe">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <owl:inverseOf rdf:resource="http://dados.ufrrj.br/ontologia/temAutor"/>
+    <rdfs:domain rdf:resource="http://dados.ufrrj.br/ontologia/Pessoa"/>
+    <rdfs:range rdf:resource="http://dados.ufrrj.br/ontologia/Publicacao"/>
+    <rdfs:label xml:lang="pt">é autor de</rdfs:label>
+    <rdfs:comment xml:lang="pt">Relaciona a pessoa às suas publicações acadêmicas.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/atuaEmArea">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:domain rdf:resource="http://dados.ufrrj.br/ontologia/Pessoa"/>
+    <rdfs:range rdf:resource="http://dados.ufrrj.br/ontologia/AreaPesquisa"/>
+    <rdfs:label xml:lang="pt">atua na área</rdfs:label>
+    <rdfs:comment xml:lang="pt">Associa a pessoa a uma área temática de pesquisa ou interesse.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/participaDeProjeto">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:domain rdf:resource="http://dados.ufrrj.br/ontologia/Pessoa"/>
+    <rdfs:range rdf:resource="http://dados.ufrrj.br/ontologia/Projeto"/>
+    <rdfs:label xml:lang="pt">participa do projeto</rdfs:label>
+    <rdfs:comment xml:lang="pt">Associa qualquer membro acadêmico (docente ou discente) a um projeto.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/temAutor">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:domain rdf:resource="http://dados.ufrrj.br/ontologia/Publicacao"/>
+    <rdfs:range rdf:resource="http://dados.ufrrj.br/ontologia/Pessoa"/>
+    <rdfs:label xml:lang="pt">tem como autor</rdfs:label>
+    <rdfs:comment xml:lang="pt">Relaciona a publicação aos seus coautores.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/vinculadoAInstituto">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:domain rdf:nodeID="nb4a64ad98e4f4d4d8226b7784d94992eb1"/>
+    <rdfs:range rdf:resource="http://dados.ufrrj.br/ontologia/Instituto"/>
+    <rdfs:label xml:lang="pt">vinculado ao instituto</rdfs:label>
+    <rdfs:comment xml:lang="pt">Conecta um departamento ou curso ao seu instituto mantenedor.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="nb4a64ad98e4f4d4d8226b7784d94992eb2">
+    <rdf:first rdf:resource="http://dados.ufrrj.br/ontologia/Departamento"/>
+    <rdf:rest rdf:nodeID="nb4a64ad98e4f4d4d8226b7784d94992eb3"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/linkOrcid">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:domain rdf:resource="http://dados.ufrrj.br/ontologia/Pessoa"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#anyURI"/>
+    <rdfs:label xml:lang="pt">identificador ORCID</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/possuiFormacao">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:domain rdf:resource="http://dados.ufrrj.br/ontologia/Pessoa"/>
+    <rdfs:range rdf:resource="http://dados.ufrrj.br/ontologia/FormacaoAcademica"/>
+    <rdfs:label xml:lang="pt">possui formação</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/anoIngresso">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:domain rdf:resource="http://dados.ufrrj.br/ontologia/Discente"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    <rdfs:label xml:lang="pt">ano de ingresso</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/Docente">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf rdf:resource="http://dados.ufrrj.br/ontologia/Pessoa"/>
+    <rdfs:label xml:lang="pt">Docente</rdfs:label>
+    <rdfs:label xml:lang="en">Professor/Faculty Member</rdfs:label>
+    <rdfs:comment xml:lang="pt">Pessoa com vínculo institucional de magistério superior na universidade.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/Projeto">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf rdf:resource="http://xmlns.com/foaf/0.1/Project"/>
+    <rdfs:subClassOf rdf:resource="http://schema.org/ResearchProject"/>
+    <rdfs:label xml:lang="pt">Projeto Acadêmico</rdfs:label>
+    <rdfs:comment xml:lang="pt">Atividade formal de pesquisa, ensino ou extensão.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/GrupoPesquisa">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf rdf:resource="http://schema.org/ResearchProject"/>
+    <rdfs:label xml:lang="pt">Grupo de Pesquisa</rdfs:label>
+    <rdfs:comment xml:lang="pt">Coletivo de pesquisadores, docentes e discentes voltado a linhas de pesquisa afins.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/biografiaResumida">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:domain rdf:resource="http://dados.ufrrj.br/ontologia/Pessoa"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:label xml:lang="pt">biografia ou apresentação resumida</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/AreaPesquisa">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <rdfs:label xml:lang="pt">Área de Pesquisa ou Interesse</rdfs:label>
+    <rdfs:comment xml:lang="pt">Conceito que representa um domínio temático de investigação acadêmica.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/matriculadoEm">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:subPropertyOf rdf:resource="http://dados.ufrrj.br/ontologia/pertenceA"/>
+    <rdfs:domain rdf:resource="http://dados.ufrrj.br/ontologia/Discente"/>
+    <rdfs:range rdf:resource="http://dados.ufrrj.br/ontologia/Curso"/>
+    <rdfs:label xml:lang="pt">matriculado em</rdfs:label>
+    <rdfs:comment xml:lang="pt">Conecta o discente ao curso em que está regularmente matriculado.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="nb4a64ad98e4f4d4d8226b7784d94992eb3">
+    <rdf:first rdf:resource="http://dados.ufrrj.br/ontologia/Curso"/>
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/FormacaoAcademica">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf rdf:resource="http://schema.org/EducationalOccupationalCredential"/>
+    <rdfs:label xml:lang="pt">Formação Acadêmica</rdfs:label>
+    <rdfs:comment xml:lang="pt">Registro de titulação ou formação educacional obtida pela pessoa.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/cursoOferecidoPor">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:domain rdf:resource="http://dados.ufrrj.br/ontologia/Curso"/>
+    <rdfs:range rdf:resource="http://dados.ufrrj.br/ontologia/UnidadeAcademica"/>
+    <rdfs:label xml:lang="pt">curso oferecido por</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/titulacao">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:domain rdf:resource="http://dados.ufrrj.br/ontologia/Docente"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:label xml:lang="pt">titulação acadêmica máxima</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="nb4a64ad98e4f4d4d8226b7784d94992eb1">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <owl:unionOf rdf:nodeID="nb4a64ad98e4f4d4d8226b7784d94992eb2"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dados.ufrrj.br/ontologia/linkLattes">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:domain rdf:resource="http://dados.ufrrj.br/ontologia/Pessoa"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#anyURI"/>
+    <rdfs:label xml:lang="pt">link do currículo Lattes</rdfs:label>
+  </rdf:Description>
+</rdf:RDF>

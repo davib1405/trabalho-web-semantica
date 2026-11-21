@@ -1,0 +1,20 @@
+# Consulta 4: Quais docentes e discentes participam de um mesmo projeto de pesquisa?
+PREFIX : <http://dados.ufrrj.br/ontologia/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?projeto ?tituloProjeto ?docente ?nomeDocente ?discente ?nomeDiscente
+WHERE {
+    ?projeto a :Projeto ;
+             rdfs:label ?tituloProjeto .
+    
+    # Docente participante do projeto
+    ?docente a :Docente ;
+             :nomeCompleto ?nomeDocente ;
+             :participaDeProjeto ?projeto .
+             
+    # Discente participante do mesmo projeto
+    ?discente a :Discente ;
+              :nomeCompleto ?nomeDiscente ;
+              :participaDeProjeto ?projeto .
+}
+ORDER BY ?tituloProjeto ?nomeDocente ?nomeDiscente

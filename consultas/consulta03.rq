@@ -1,0 +1,14 @@
+# Consulta 3: Quais docentes atuam em determinada área de pesquisa?
+PREFIX : <http://dados.ufrrj.br/ontologia/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?docente ?nomeDocente ?cargo ?area ?nomeArea
+WHERE {
+    ?docente a :Docente ;
+             :nomeCompleto ?nomeDocente ;
+             :cargoOuFuncao ?cargo ;
+             :atuaEmArea ?area .
+    ?area skos:prefLabel ?nomeArea .
+    FILTER (LANG(?nomeArea) = "pt")
+}
+ORDER BY ?nomeArea ?nomeDocente

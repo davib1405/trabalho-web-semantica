@@ -1,0 +1,23 @@
+Consulta 01: Quais são os docentes cadastrados e seus respectivos departamentos ou unidades acadêmicas?
+================================================================================
+
+# Consulta 1: Quais são os docentes cadastrados e seus respectivos departamentos ou unidades acadêmicas?
+PREFIX : <http://dados.ufrrj.br/ontologia/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?docente ?nomeDocente ?departamento ?nomeDepartamento
+WHERE {
+    ?docente a :Docente ;
+             :nomeCompleto ?nomeDocente ;
+             :lotadoEm ?departamento .
+    ?departamento rdfs:label ?nomeDepartamento .
+}
+ORDER BY ?nomeDocente
+
+================================================================================
+Total de registros retornados: 2
+--------------------------------------------------------------------------------
+docente                                               | nomeDocente                      | departamento                                  | nomeDepartamento          
+------------------------------------------------------+----------------------------------+-----------------------------------------------+---------------------------
+http://dados.ufrrj.br/recurso/docente_ana_silva       | Profa. Dra. Ana Exemplo da Silva | http://dados.ufrrj.br/recurso/DeptoComputacao | Departamento de Computação
+http://dados.ufrrj.br/recurso/docente_mariana_almeida | Profa. Dra. Mariana Almeida      | http://dados.ufrrj.br/recurso/DeptoComputacao | Departamento de Computação

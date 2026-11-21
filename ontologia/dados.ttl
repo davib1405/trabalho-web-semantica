@@ -1,0 +1,252 @@
+@prefix : <http://dados.ufrrj.br/ontologia/> .
+@prefix ufrrj: <http://dados.ufrrj.br/recurso/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix schema: <http://schema.org/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix wd: <https://www.wikidata.org/wiki/> .
+@prefix dbp: <http://dbpedia.org/resource/> .
+
+#################################################################
+#    Metadados do Conjunto de Dados (LOD Dataset)
+#################################################################
+
+<http://dados.ufrrj.br/dataset/perfis-academicos> a schema:Dataset ;
+    dcterms:title "Grafo de Conhecimento de Perfis Acadêmicos da UFRRJ"@pt ;
+    dcterms:description "Conjunto de dados abertos interligados que descreve perfis de docentes e discentes, departamentos, cursos, projetos de pesquisa e publicações da UFRRJ."@pt ;
+    dcterms:publisher ufrrj:UFRRJ ;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
+    dcterms:created "2026-11-21"^^xsd:date ;
+    dcterms:modified "2026-11-21"^^xsd:date ;
+    owl:versionInfo "1.0" .
+
+#################################################################
+#    Instituição e Localização (Conexões LOD Externas)
+#################################################################
+
+ufrrj:UFRRJ a schema:CollegeOrUniversity, :UnidadeAcademica ;
+    rdfs:label "Universidade Federal Rural do Rio de Janeiro"@pt, "Federal Rural University of Rio de Janeiro"@en ;
+    schema:name "Universidade Federal Rural do Rio de Janeiro" ;
+    schema:location ufrrj:Seropedica ;
+    rdfs:seeAlso <https://www.wikidata.org/wiki/Q3550293> ;
+    owl:sameAs <http://dbpedia.org/resource/Federal_Rural_University_of_Rio_de_Janeiro> .
+
+ufrrj:Seropedica a schema:Place ;
+    rdfs:label "Seropédica - RJ, Brasil"@pt ;
+    owl:sameAs <https://www.wikidata.org/wiki/Q1002058> ;
+    rdfs:seeAlso <http://dbpedia.org/resource/Serop%C3%A9dica> .
+
+#################################################################
+#    Unidades Acadêmicas e Cursos
+#################################################################
+
+ufrrj:InstitutoCienciasExatas a :Instituto, :UnidadeAcademica ;
+    rdfs:label "Instituto de Ciências Exatas (ICE)"@pt ;
+    schema:name "Instituto de Ciências Exatas" ;
+    :pertenceA ufrrj:UFRRJ .
+
+ufrrj:DeptoComputacao a :Departamento, :UnidadeAcademica ;
+    rdfs:label "Departamento de Computação"@pt ;
+    schema:name "Departamento de Computação" ;
+    :vinculadoAInstituto ufrrj:InstitutoCienciasExatas ;
+    :pertenceA ufrrj:InstitutoCienciasExatas .
+
+ufrrj:CursoSistemasInformacao a :Curso ;
+    rdfs:label "Bacharelado em Sistemas de Informação"@pt ;
+    schema:name "Bacharelado em Sistemas de Informação" ;
+    :vinculadoAInstituto ufrrj:InstitutoCienciasExatas ;
+    :cursoOferecidoPor ufrrj:DeptoComputacao .
+
+ufrrj:CursoCienciaComputacao a :Curso ;
+    rdfs:label "Bacharelado em Ciência da Computação"@pt ;
+    schema:name "Bacharelado em Ciência da Computação" ;
+    :vinculadoAInstituto ufrrj:InstitutoCienciasExatas ;
+    :cursoOferecidoPor ufrrj:DeptoComputacao .
+
+#################################################################
+#    Áreas Temáticas e Conceitos (SKOS com Links Externos LOD)
+#################################################################
+
+ufrrj:AreaWebSemantica a :AreaPesquisa, skos:Concept ;
+    skos:prefLabel "Web Semântica"@pt, "Semantic Web"@en ;
+    skos:altLabel "Dados Conectados"@pt, "Linked Data"@en ;
+    skos:exactMatch <https://www.wikidata.org/wiki/Q54837> ;
+    skos:closeMatch <http://dbpedia.org/resource/Semantic_Web> .
+
+ufrrj:AreaInteligenciaArtificial a :AreaPesquisa, skos:Concept ;
+    skos:prefLabel "Inteligência Artificial"@pt, "Artificial Intelligence"@en ;
+    skos:altLabel "IA"@pt, "AI"@en ;
+    skos:exactMatch <https://www.wikidata.org/wiki/Q11660> ;
+    skos:closeMatch <http://dbpedia.org/resource/Artificial_intelligence> .
+
+ufrrj:AreaDadosAbertos a :AreaPesquisa, skos:Concept ;
+    skos:prefLabel "Dados Abertos"@pt, "Open Data"@en ;
+    skos:altLabel "Open Government Data"@en ;
+    skos:exactMatch <https://www.wikidata.org/wiki/Q309903> .
+
+ufrrj:AreaEngenhariaConhecimento a :AreaPesquisa, skos:Concept ;
+    skos:prefLabel "Engenharia de Conhecimento"@pt, "Knowledge Engineering"@en ;
+    skos:exactMatch <https://www.wikidata.org/wiki/Q1143899> .
+
+ufrrj:AreaDesenvolvimentoWeb a :AreaPesquisa, skos:Concept ;
+    skos:prefLabel "Desenvolvimento Web"@pt, "Web Development"@en ;
+    skos:exactMatch <https://www.wikidata.org/wiki/Q386275> .
+
+ufrrj:AreaAcessibilidade a :AreaPesquisa, skos:Concept ;
+    skos:prefLabel "Acessibilidade Web"@pt, "Web Accessibility"@en ;
+    skos:exactMatch <https://www.wikidata.org/wiki/Q12370> .
+
+#################################################################
+#    Projetos de Pesquisa e Grupos
+#################################################################
+
+ufrrj:ProjetoDadosAbertos a :ProjetoPesquisa, :Projeto ;
+    rdfs:label "Projeto Exemplo de Dados Abertos"@pt ;
+    dcterms:title "Projeto Exemplo de Dados Abertos: integração e publicação de dados acadêmicos"@pt ;
+    dcterms:description "Pesquisa voltada à extração, estruturação e publicação de dados acadêmicos e educacionais segundo os princípios de Linked Open Data."@pt ;
+    :coordenaProjeto ufrrj:docente_ana_silva .
+
+ufrrj:ProjetoEducacaoDigital a :ProjetoPesquisa, :Projeto ;
+    rdfs:label "Projeto de Pesquisa em Educação Digital e Inclusão Tecnológica"@pt ;
+    dcterms:title "Projeto de Pesquisa em Educação Digital e Inclusão Tecnológica"@pt ;
+    dcterms:description "Estudo e desenvolvimento de tecnologias digitais e modelos de inteligência artificial aplicados à educação inclusiva e acessível."@pt ;
+    :coordenaProjeto ufrrj:docente_mariana_almeida .
+
+ufrrj:GrupoSistemasInteligentes a :GrupoPesquisa ;
+    rdfs:label "Grupo de Pesquisa em Sistemas Inteligentes e Semântica"@pt ;
+    dcterms:title "Grupo de Pesquisa em Sistemas Inteligentes e Semântica"@pt ;
+    schema:member ufrrj:docente_ana_silva, ufrrj:docente_mariana_almeida .
+
+#################################################################
+#    Disciplinas
+#################################################################
+
+ufrrj:DiscWebSemantica a :Disciplina ;
+    rdfs:label "Web Semântica"@pt ;
+    schema:name "Web Semântica" ;
+    schema:courseCode "COMP042" .
+
+ufrrj:DiscBancoDados a :Disciplina ;
+    rdfs:label "Banco de Dados"@pt ;
+    schema:name "Banco de Dados" ;
+    schema:courseCode "COMP021" .
+
+ufrrj:DiscEngenhariaSoftware a :Disciplina ;
+    rdfs:label "Engenharia de Software"@pt ;
+    schema:name "Engenharia de Software" ;
+    schema:courseCode "COMP035" .
+
+ufrrj:DiscInteligenciaArtificial a :Disciplina ;
+    rdfs:label "Inteligência Artificial"@pt ;
+    schema:name "Inteligência Artificial" ;
+    schema:courseCode "COMP050" .
+
+#################################################################
+#    Publicações
+#################################################################
+
+ufrrj:Pub2024DadosConectados a :Publicacao ;
+    rdfs:label "Silva, Pereira e Almeida (2024)"@pt ;
+    dcterms:title "Publicação sobre dados conectados e interoperabilidade acadêmica"@pt ;
+    :anoPublicacao 2024 ;
+    :temAutor ufrrj:docente_ana_silva, ufrrj:discente_joao_pereira, ufrrj:docente_mariana_almeida .
+
+ufrrj:Pub2022RepConhecimento a :Publicacao ;
+    rdfs:label "Silva (2022)"@pt ;
+    dcterms:title "Exemplo de estudo comparativo em representação do conhecimento"@pt ;
+    :anoPublicacao 2022 ;
+    :temAutor ufrrj:docente_ana_silva .
+
+ufrrj:Pub2025IAeAcessibilidade a :Publicacao ;
+    rdfs:label "Almeida e Ferreira (2025)"@pt ;
+    dcterms:title "Aplicações de inteligência artificial na acessibilidade de dados abertos universitários"@pt ;
+    :anoPublicacao 2025 ;
+    :temAutor ufrrj:docente_mariana_almeida, ufrrj:discente_lucas_ferreira .
+
+#################################################################
+#    Docentes
+#################################################################
+
+ufrrj:docente_ana_silva a :Docente, :Pessoa ;
+    rdfs:label "Profa. Dra. Ana Exemplo da Silva"@pt ;
+    :nomeCompleto "Profa. Dra. Ana Exemplo da Silva" ;
+    :cargoOuFuncao "Professora Associada" ;
+    :titulacao "Doutorado em Ciência da Computação" ;
+    :emailInstitucional "anaexemplo@ufrrj.br" ;
+    :biografiaResumida "Sou professora da área de Computação na UFRRJ, com formação em Sistemas de Informação, mestrado em Informática e doutorado em Ciência da Computação. Minha trajetória acadêmica inclui atividades de ensino, pesquisa e orientação de estudantes em temas relacionados à Web Semântica, à Engenharia de Conhecimento e aos Dados Abertos." ;
+    :lotadoEm ufrrj:DeptoComputacao ;
+    :pertenceA ufrrj:DeptoComputacao, ufrrj:InstitutoCienciasExatas ;
+    :atuaEmArea ufrrj:AreaWebSemantica, ufrrj:AreaEngenhariaConhecimento, ufrrj:AreaDadosAbertos ;
+    :coordenaProjeto ufrrj:ProjetoDadosAbertos ;
+    :participaDeProjeto ufrrj:ProjetoDadosAbertos ;
+    :membroDeGrupo ufrrj:GrupoSistemasInteligentes ;
+    :leciona ufrrj:DiscWebSemantica, ufrrj:DiscBancoDados, ufrrj:DiscEngenhariaSoftware ;
+    :orienta ufrrj:discente_joao_pereira ;
+    :autorDe ufrrj:Pub2024DadosConectados, ufrrj:Pub2022RepConhecimento ;
+    :linkLattes <https://lattes.cnpq.br/0000000000000001> ;
+    :linkOrcid <https://orcid.org/0000-0002-1825-0097> ;
+    :linkPaginaPessoal <https://anaexemplo.ufrrj.br/> ;
+    schema:sameAs <https://orcid.org/0000-0002-1825-0097> .
+
+ufrrj:docente_mariana_almeida a :Docente, :Pessoa ;
+    rdfs:label "Profa. Dra. Mariana Almeida"@pt ;
+    :nomeCompleto "Profa. Dra. Mariana Almeida" ;
+    :cargoOuFuncao "Professora Adjunta" ;
+    :titulacao "Doutorado em Engenharia de Sistemas e Computação" ;
+    :emailInstitucional "mariana.almeida@ufrrj.br" ;
+    :biografiaResumida "Professora do Departamento de Computação da UFRRJ. Desenvolve pesquisas nas áreas de Inteligência Artificial, Sistemas de Informação e Acessibilidade Digital, com ênfase em modelos semânticos e representação do conhecimento para inovação educacional." ;
+    :lotadoEm ufrrj:DeptoComputacao ;
+    :pertenceA ufrrj:DeptoComputacao, ufrrj:InstitutoCienciasExatas ;
+    :atuaEmArea ufrrj:AreaInteligenciaArtificial, ufrrj:AreaWebSemantica ;
+    :coordenaProjeto ufrrj:ProjetoEducacaoDigital ;
+    :participaDeProjeto ufrrj:ProjetoEducacaoDigital, ufrrj:ProjetoDadosAbertos ;
+    :membroDeGrupo ufrrj:GrupoSistemasInteligentes ;
+    :leciona ufrrj:DiscInteligenciaArtificial, ufrrj:DiscBancoDados ;
+    :orienta ufrrj:discente_lucas_ferreira ;
+    :autorDe ufrrj:Pub2024DadosConectados, ufrrj:Pub2025IAeAcessibilidade ;
+    :linkLattes <https://lattes.cnpq.br/0000000000000002> ;
+    :linkOrcid <https://orcid.org/0000-0001-5000-0000> ;
+    :linkPaginaPessoal <https://marianaalmeida.ufrrj.br/> ;
+    schema:sameAs <https://orcid.org/0000-0001-5000-0000> .
+
+#################################################################
+#    Discentes
+#################################################################
+
+ufrrj:discente_joao_pereira a :Discente, :Pessoa ;
+    rdfs:label "João Exemplo Pereira"@pt ;
+    :nomeCompleto "João Exemplo Pereira" ;
+    :cargoOuFuncao "Discente de Graduação" ;
+    :matriculadoEm ufrrj:CursoSistemasInformacao ;
+    :pertenceA ufrrj:CursoSistemasInformacao, ufrrj:InstitutoCienciasExatas ;
+    :anoIngresso 2024 ;
+    :periodoAtual "5º período" ;
+    :emailInstitucional "joao.pereira@ufrrj.br" ;
+    :biografiaResumida "Estudante de Sistemas de Informação na UFRRJ com interesse em desenvolvimento web, tecnologias de integração de dados e inteligência artificial. Atua como bolsista de pesquisa em projetos de dados abertos." ;
+    :atuaEmArea ufrrj:AreaDesenvolvimentoWeb, ufrrj:AreaDadosAbertos, ufrrj:AreaInteligenciaArtificial ;
+    :participaDeProjeto ufrrj:ProjetoDadosAbertos ;
+    :autorDe ufrrj:Pub2024DadosConectados ;
+    :linkLattes <https://lattes.cnpq.br/0000000000000003> ;
+    :linkOrcid <https://orcid.org/0009-0001-1111-2222> ;
+    :linkPaginaPessoal <https://joaopereira.exemplo.ufrrj.br/> .
+
+ufrrj:discente_lucas_ferreira a :Discente, :Pessoa ;
+    rdfs:label "Lucas Ferreira"@pt ;
+    :nomeCompleto "Lucas Ferreira" ;
+    :cargoOuFuncao "Discente de Graduação" ;
+    :matriculadoEm ufrrj:CursoSistemasInformacao ;
+    :pertenceA ufrrj:CursoSistemasInformacao, ufrrj:InstitutoCienciasExatas ;
+    :anoIngresso 2023 ;
+    :periodoAtual "7º período" ;
+    :emailInstitucional "lucas.ferreira@ufrrj.br" ;
+    :biografiaResumida "Estudante de Bacharelado em Sistemas de Informação na UFRRJ. Foco em acessibilidade digital, padrões da Web Semântica e desenvolvimento de software voltado para a sociedade." ;
+    :atuaEmArea ufrrj:AreaDesenvolvimentoWeb, ufrrj:AreaAcessibilidade, ufrrj:AreaWebSemantica ;
+    :participaDeProjeto ufrrj:ProjetoDadosAbertos, ufrrj:ProjetoEducacaoDigital ;
+    :autorDe ufrrj:Pub2025IAeAcessibilidade ;
+    :linkLattes <https://lattes.cnpq.br/0000000000000004> ;
+    :linkOrcid <https://orcid.org/0009-0002-3333-4444> ;
+    :linkPaginaPessoal <https://lucasferreira.exemplo.ufrrj.br/> .

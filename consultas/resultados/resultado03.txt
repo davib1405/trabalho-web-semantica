@@ -1,0 +1,28 @@
+Consulta 03: Quais docentes atuam em determinada área de pesquisa?
+================================================================================
+
+# Consulta 3: Quais docentes atuam em determinada área de pesquisa?
+PREFIX : <http://dados.ufrrj.br/ontologia/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?docente ?nomeDocente ?cargo ?area ?nomeArea
+WHERE {
+    ?docente a :Docente ;
+             :nomeCompleto ?nomeDocente ;
+             :cargoOuFuncao ?cargo ;
+             :atuaEmArea ?area .
+    ?area skos:prefLabel ?nomeArea .
+    FILTER (LANG(?nomeArea) = "pt")
+}
+ORDER BY ?nomeArea ?nomeDocente
+
+================================================================================
+Total de registros retornados: 5
+--------------------------------------------------------------------------------
+docente                                               | nomeDocente                      | cargo                | area                                                     | nomeArea                  
+------------------------------------------------------+----------------------------------+----------------------+----------------------------------------------------------+---------------------------
+http://dados.ufrrj.br/recurso/docente_ana_silva       | Profa. Dra. Ana Exemplo da Silva | Professora Associada | http://dados.ufrrj.br/recurso/AreaDadosAbertos           | Dados Abertos             
+http://dados.ufrrj.br/recurso/docente_ana_silva       | Profa. Dra. Ana Exemplo da Silva | Professora Associada | http://dados.ufrrj.br/recurso/AreaEngenhariaConhecimento | Engenharia de Conhecimento
+http://dados.ufrrj.br/recurso/docente_mariana_almeida | Profa. Dra. Mariana Almeida      | Professora Adjunta   | http://dados.ufrrj.br/recurso/AreaInteligenciaArtificial | Inteligência Artificial   
+http://dados.ufrrj.br/recurso/docente_ana_silva       | Profa. Dra. Ana Exemplo da Silva | Professora Associada | http://dados.ufrrj.br/recurso/AreaWebSemantica           | Web Semântica             
+http://dados.ufrrj.br/recurso/docente_mariana_almeida | Profa. Dra. Mariana Almeida      | Professora Adjunta   | http://dados.ufrrj.br/recurso/AreaWebSemantica           | Web Semântica             

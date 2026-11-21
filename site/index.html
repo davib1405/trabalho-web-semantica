@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Diretório de Perfis Acadêmicos da UFRRJ integrados à Web Semântica e Linked Open Data.">
+  <title>Portal de Perfis Acadêmicos | UFRRJ - Web Semântica</title>
+  <link rel="stylesheet" href="estilos.css">
+  <link rel="alternate" type="text/turtle" href="../ontologia/dados.ttl" title="Grafo RDF em Turtle">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <h1 class="site-title">Universidade Federal Rural do Rio de Janeiro</h1>
+      <p class="site-subtitle">Diretório de Perfis Acadêmicos &bull; Web Semântica e Linked Open Data (LOD)</p>
+    </div>
+  </header>
+
+  <main style="max-width: 1000px; margin: 2rem auto; padding: 0 1rem;">
+    <section class="card" style="margin-bottom: 2rem; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white;">
+      <h2 style="color: white; margin-top: 0;">Ecossistema de Dados Abertos e Interligados</h2>
+      <p style="font-size: 1.05rem; line-height: 1.6; opacity: 0.95;">
+        Este portal disponibiliza os perfis de docentes e discentes da UFRRJ estruturados semanticamente.
+        Todas as informações apresentadas foram geradas a partir do <strong>grafo RDF/Turtle</strong> da ontologia institucional, permitindo consultas semânticas em <strong>SPARQL</strong> e interoperabilidade com fontes de dados globais (Wikidata, DBpedia e ORCID).
+      </p>
+      <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="../ontologia/dados.ttl" style="background: white; color: #1e3c72; padding: 8px 16px; border-radius: 6px; font-weight: bold; text-decoration: none;">Baixar RDF Turtle (.ttl)</a>
+        <a href="../ontologia/ontologia.owl" style="background: rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 6px; font-weight: bold; text-decoration: none; border: 1px solid white;">Ver Ontologia OWL</a>
+        <a href="../consultas/resultados_consolidados.md" style="background: rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 6px; font-weight: bold; text-decoration: none; border: 1px solid white;">Consultas SPARQL</a>
+      </div>
+    </section>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+      <section>
+        <h2 style="border-bottom: 2px solid #1e3c72; padding-bottom: 8px; color: #1e3c72;">Perfis de Docentes (2)</h2>
+        
+      <article class="card profile-item" style="margin-bottom: 1.5rem;">
+        <div style="display: flex; gap: 1rem; align-items: center;">
+          <img src="foto-exemplo.svg" width="60" height="60" alt="Avatar" style="border-radius: 50%;">
+          <div>
+            <h3 style="margin: 0; font-size: 1.2rem;"><a href="perfis/docente_ana_silva.html" style="color: #1e3c72; text-decoration: none;">Profa. Dra. Ana Exemplo da Silva</a></h3>
+            <p style="margin: 2px 0; color: #64748b; font-size: 0.9rem;">Professora Associada &bull; Departamento de Computação</p>
+            <p style="margin: 4px 0; font-size: 0.85rem;"><strong>Áreas:</strong> Web Semântica, Engenharia de Conhecimento, Dados Abertos</p>
+          </div>
+        </div>
+        <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; padding-top: 8px;">
+          <span style="font-size: 0.8rem; color: #94a3b8;">URI: <code>http://dados.ufrrj.br/recurso/docente_ana_silva</code></span>
+          <a href="perfis/docente_ana_silva.html" style="font-weight: 600; color: #0284c7; text-decoration: none;">Ver Perfil Completo &rarr;</a>
+        </div>
+      </article>
+    
+      <article class="card profile-item" style="margin-bottom: 1.5rem;">
+        <div style="display: flex; gap: 1rem; align-items: center;">
+          <img src="foto-exemplo.svg" width="60" height="60" alt="Avatar" style="border-radius: 50%;">
+          <div>
+            <h3 style="margin: 0; font-size: 1.2rem;"><a href="perfis/docente_mariana_almeida.html" style="color: #1e3c72; text-decoration: none;">Profa. Dra. Mariana Almeida</a></h3>
+            <p style="margin: 2px 0; color: #64748b; font-size: 0.9rem;">Professora Adjunta &bull; Departamento de Computação</p>
+            <p style="margin: 4px 0; font-size: 0.85rem;"><strong>Áreas:</strong> Inteligência Artificial, Web Semântica</p>
+          </div>
+        </div>
+        <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; padding-top: 8px;">
+          <span style="font-size: 0.8rem; color: #94a3b8;">URI: <code>http://dados.ufrrj.br/recurso/docente_mariana_almeida</code></span>
+          <a href="perfis/docente_mariana_almeida.html" style="font-weight: 600; color: #0284c7; text-decoration: none;">Ver Perfil Completo &rarr;</a>
+        </div>
+      </article>
+    
+      </section>
+
+      <section>
+        <h2 style="border-bottom: 2px solid #1e3c72; padding-bottom: 8px; color: #1e3c72;">Perfis de Discentes (2)</h2>
+        
+      <article class="card profile-item" style="margin-bottom: 1.5rem;">
+        <div style="display: flex; gap: 1rem; align-items: center;">
+          <img src="foto-exemplo.svg" width="60" height="60" alt="Avatar" style="border-radius: 50%;">
+          <div>
+            <h3 style="margin: 0; font-size: 1.2rem;"><a href="perfis/discente_joao_pereira.html" style="color: #1e3c72; text-decoration: none;">João Exemplo Pereira</a></h3>
+            <p style="margin: 2px 0; color: #64748b; font-size: 0.9rem;">Discente de Graduação &bull; Bacharelado em Sistemas de Informação</p>
+            <p style="margin: 4px 0; font-size: 0.85rem;"><strong>Áreas:</strong> Desenvolvimento Web, Dados Abertos, Inteligência Artificial</p>
+          </div>
+        </div>
+        <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; padding-top: 8px;">
+          <span style="font-size: 0.8rem; color: #94a3b8;">URI: <code>http://dados.ufrrj.br/recurso/discente_joao_pereira</code></span>
+          <a href="perfis/discente_joao_pereira.html" style="font-weight: 600; color: #0284c7; text-decoration: none;">Ver Perfil Completo &rarr;</a>
+        </div>
+      </article>
+    
+      <article class="card profile-item" style="margin-bottom: 1.5rem;">
+        <div style="display: flex; gap: 1rem; align-items: center;">
+          <img src="foto-exemplo.svg" width="60" height="60" alt="Avatar" style="border-radius: 50%;">
+          <div>
+            <h3 style="margin: 0; font-size: 1.2rem;"><a href="perfis/discente_lucas_ferreira.html" style="color: #1e3c72; text-decoration: none;">Lucas Ferreira</a></h3>
+            <p style="margin: 2px 0; color: #64748b; font-size: 0.9rem;">Discente de Graduação &bull; Bacharelado em Sistemas de Informação</p>
+            <p style="margin: 4px 0; font-size: 0.85rem;"><strong>Áreas:</strong> Desenvolvimento Web, Acessibilidade Web, Web Semântica</p>
+          </div>
+        </div>
+        <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; padding-top: 8px;">
+          <span style="font-size: 0.8rem; color: #94a3b8;">URI: <code>http://dados.ufrrj.br/recurso/discente_lucas_ferreira</code></span>
+          <a href="perfis/discente_lucas_ferreira.html" style="font-weight: 600; color: #0284c7; text-decoration: none;">Ver Perfil Completo &rarr;</a>
+        </div>
+      </article>
+    
+      </section>
+    </div>
+
+    <section class="card" style="margin-top: 2rem;">
+      <h2>Recursos e Evidências do Projeto</h2>
+      <ul class="clean-list">
+        <li><strong>Repositório Estruturado:</strong> Em conformidade estrita com o documento do trabalho acadêmico (UFRRJ).</li>
+        <li><strong>Conexões LOD Externas:</strong> UFRRJ (<a href="https://www.wikidata.org/wiki/Q3550293" target="_blank">Wikidata Q3550293</a>, <a href="http://dbpedia.org/resource/Federal_Rural_University_of_Rio_de_Janeiro" target="_blank">DBpedia</a>), Seropédica (<a href="https://www.wikidata.org/wiki/Q1002058" target="_blank">Wikidata Q1002058</a>), Áreas de Pesquisa SKOS (<a href="https://www.wikidata.org/wiki/Q54837" target="_blank">Web Semântica</a>, <a href="https://www.wikidata.org/wiki/Q11660" target="_blank">IA</a>, <a href="https://www.wikidata.org/wiki/Q309903" target="_blank">Dados Abertos</a>) e <a href="https://orcid.org/" target="_blank">ORCIDs</a>.</li>
+        <li><strong>Perguntas de Competência:</strong> Todas as 6 consultas SPARQL implementadas e validadas com 100% de sucesso.</li>
+        <li><strong>Licença de Dados:</strong> <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International (CC-BY 4.0)</a>.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Trabalho de Web Semântica e Linked Open Data &bull; UFRRJ / ICE / Departamento de Computação</p>
+    <p>Autor: David Barros da Rosa Filho &bull; 2026</p>
+  </footer>
+</body>
+</html>

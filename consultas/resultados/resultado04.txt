@@ -1,0 +1,34 @@
+Consulta 04: Quais docentes e discentes participam de um mesmo projeto de pesquisa?
+================================================================================
+
+# Consulta 4: Quais docentes e discentes participam de um mesmo projeto de pesquisa?
+PREFIX : <http://dados.ufrrj.br/ontologia/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?projeto ?tituloProjeto ?docente ?nomeDocente ?discente ?nomeDiscente
+WHERE {
+    ?projeto a :Projeto ;
+             rdfs:label ?tituloProjeto .
+    
+    # Docente participante do projeto
+    ?docente a :Docente ;
+             :nomeCompleto ?nomeDocente ;
+             :participaDeProjeto ?projeto .
+             
+    # Discente participante do mesmo projeto
+    ?discente a :Discente ;
+              :nomeCompleto ?nomeDiscente ;
+              :participaDeProjeto ?projeto .
+}
+ORDER BY ?tituloProjeto ?nomeDocente ?nomeDiscente
+
+================================================================================
+Total de registros retornados: 5
+--------------------------------------------------------------------------------
+projeto                                              | tituloProjeto                                                  | docente                                               | nomeDocente                      | discente                                              | nomeDiscente        
+-----------------------------------------------------+----------------------------------------------------------------+-------------------------------------------------------+----------------------------------+-------------------------------------------------------+---------------------
+http://dados.ufrrj.br/recurso/ProjetoDadosAbertos    | Projeto Exemplo de Dados Abertos                               | http://dados.ufrrj.br/recurso/docente_ana_silva       | Profa. Dra. Ana Exemplo da Silva | http://dados.ufrrj.br/recurso/discente_joao_pereira   | João Exemplo Pereira
+http://dados.ufrrj.br/recurso/ProjetoDadosAbertos    | Projeto Exemplo de Dados Abertos                               | http://dados.ufrrj.br/recurso/docente_ana_silva       | Profa. Dra. Ana Exemplo da Silva | http://dados.ufrrj.br/recurso/discente_lucas_ferreira | Lucas Ferreira      
+http://dados.ufrrj.br/recurso/ProjetoDadosAbertos    | Projeto Exemplo de Dados Abertos                               | http://dados.ufrrj.br/recurso/docente_mariana_almeida | Profa. Dra. Mariana Almeida      | http://dados.ufrrj.br/recurso/discente_joao_pereira   | João Exemplo Pereira
+http://dados.ufrrj.br/recurso/ProjetoDadosAbertos    | Projeto Exemplo de Dados Abertos                               | http://dados.ufrrj.br/recurso/docente_mariana_almeida | Profa. Dra. Mariana Almeida      | http://dados.ufrrj.br/recurso/discente_lucas_ferreira | Lucas Ferreira      
+http://dados.ufrrj.br/recurso/ProjetoEducacaoDigital | Projeto de Pesquisa em Educação Digital e Inclusão Tecnológica | http://dados.ufrrj.br/recurso/docente_mariana_almeida | Profa. Dra. Mariana Almeida      | http://dados.ufrrj.br/recurso/discente_lucas_ferreira | Lucas Ferreira      

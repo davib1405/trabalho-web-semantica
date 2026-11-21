@@ -1,0 +1,34 @@
+Consulta 05: Quais publicações estão associadas a determinado docente e quem são seus coautores?
+================================================================================
+
+# Consulta 5: Quais publicações estão associadas a determinado docente e quem são seus coautores?
+PREFIX : <http://dados.ufrrj.br/ontologia/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+
+SELECT DISTINCT ?docente ?nomeDocente ?publicacao ?tituloPublicacao ?anoPublicacao ?coautor ?nomeCoautor
+WHERE {
+    ?docente a :Docente ;
+             :nomeCompleto ?nomeDocente .
+             
+    ?publicacao a :Publicacao ;
+                dcterms:title ?tituloPublicacao ;
+                :anoPublicacao ?anoPublicacao ;
+                :temAutor ?docente, ?coautor .
+                
+    ?coautor :nomeCompleto ?nomeCoautor .
+    
+    # Exclui o próprio docente da lista de coautores
+    FILTER (?coautor != ?docente)
+}
+ORDER BY ?nomeDocente ?anoPublicacao ?tituloPublicacao ?nomeCoautor
+
+================================================================================
+Total de registros retornados: 5
+--------------------------------------------------------------------------------
+docente                                               | nomeDocente                      | publicacao                                             | tituloPublicacao                                                                        | anoPublicacao | coautor                                               | nomeCoautor                     
+------------------------------------------------------+----------------------------------+--------------------------------------------------------+-----------------------------------------------------------------------------------------+---------------+-------------------------------------------------------+---------------------------------
+http://dados.ufrrj.br/recurso/docente_ana_silva       | Profa. Dra. Ana Exemplo da Silva | http://dados.ufrrj.br/recurso/Pub2024DadosConectados   | Publicação sobre dados conectados e interoperabilidade acadêmica                        | 2024          | http://dados.ufrrj.br/recurso/discente_joao_pereira   | João Exemplo Pereira            
+http://dados.ufrrj.br/recurso/docente_ana_silva       | Profa. Dra. Ana Exemplo da Silva | http://dados.ufrrj.br/recurso/Pub2024DadosConectados   | Publicação sobre dados conectados e interoperabilidade acadêmica                        | 2024          | http://dados.ufrrj.br/recurso/docente_mariana_almeida | Profa. Dra. Mariana Almeida     
+http://dados.ufrrj.br/recurso/docente_mariana_almeida | Profa. Dra. Mariana Almeida      | http://dados.ufrrj.br/recurso/Pub2024DadosConectados   | Publicação sobre dados conectados e interoperabilidade acadêmica                        | 2024          | http://dados.ufrrj.br/recurso/discente_joao_pereira   | João Exemplo Pereira            
+http://dados.ufrrj.br/recurso/docente_mariana_almeida | Profa. Dra. Mariana Almeida      | http://dados.ufrrj.br/recurso/Pub2024DadosConectados   | Publicação sobre dados conectados e interoperabilidade acadêmica                        | 2024          | http://dados.ufrrj.br/recurso/docente_ana_silva       | Profa. Dra. Ana Exemplo da Silva
+http://dados.ufrrj.br/recurso/docente_mariana_almeida | Profa. Dra. Mariana Almeida      | http://dados.ufrrj.br/recurso/Pub2025IAeAcessibilidade | Aplicações de inteligência artificial na acessibilidade de dados abertos universitários | 2025          | http://dados.ufrrj.br/recurso/discente_lucas_ferreira | Lucas Ferreira                  
