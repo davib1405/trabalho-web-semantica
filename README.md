@@ -147,16 +147,7 @@ O grafo conecta-se a bases globais canônicas com justificativas semânticas exp
 
 ---
 
-## 6. Publicação no GitHub Pages
-O conteúdo do diretório `site/` está pronto para publicação estática gratuita no **GitHub Pages**:
-1. Criar repositório público no GitHub.
-2. Fazer push de todos os arquivos.
-3. Em *Settings > Pages*, selecionar a branch `main` e a pasta `/site` (ou renomear `site/` para `docs/`).
-4. O portal ficará online publicamente no endereço `https://<usuario>.github.io/<repositorio>/`.
-
----
-
-## 7. Licenciamento e Direitos
+## 6. Licenciamento e Direitos
 * **Licença dos Dados:** [Creative Commons Attribution 4.0 International (CC-BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
 * **Data da Versão:** 21 de Novembro de 2026.
 * **Uso de IA:** Totalmente discriminado e auditado em [`declaracao-ia.md`](declaracao-ia.md).
