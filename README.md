@@ -3,7 +3,7 @@
 **Instituto de Ciências Exatas (ICE) — Departamento de Computação**  
 **Disciplina:** Web Semântica e Linked Open Data  
 **Docente:** Prof. Dr. Tiago Cruz de França  
-**Discente / Autor:** David Barros da Rosa Filho  
+**Discentes / Autores:** David Barros da Rosa Filho, Lucyan Ovídio da Silva Soares e Mariana Corrêa de Medeiros.  
 
 * 🌐 **Endereço Público do Site (GitHub Pages):** [https://davib1405.github.io/trabalho-web-semantica/](https://davib1405.github.io/trabalho-web-semantica/)
 * 📦 **Repositório Oficial no GitHub:** [https://github.com/davib1405/trabalho-web-semantica](https://github.com/davib1405/trabalho-web-semantica)
